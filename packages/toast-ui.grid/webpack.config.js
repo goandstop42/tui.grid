@@ -132,7 +132,7 @@ module.exports = (env, { mode }) => {
     plugins,
     devServer: {
       inline: true,
-      host: '0.0.0.0',
+      host: '127.0.0.1',
       port: 8000,
       disableHostCheck: true,
     },

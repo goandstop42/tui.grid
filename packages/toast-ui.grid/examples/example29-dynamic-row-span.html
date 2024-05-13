@@ -1,73 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>29. Dynamic rowSpan</title>
-    <link rel="stylesheet" type="text/css" href="./css/tui-example-style.css" />
-    <link rel="stylesheet" type="text/css" href="../dist/tui-grid.css" />
-  </head>
+<head>
+        <meta charset="utf-8"/>
+        <title>29. Dynamic rowSpan</title>
+        <link rel="stylesheet" type="text/css" href="./css/tui-example-style.css"/>
+        <link rel="stylesheet" type="text/css" href="../src/css/grid.css"/>
 
-  <body>
-    <div class="description">
-      You can see the tutorial
-      <a
-        href="https://github.com/nhn/tui.grid/blob/master/packages/toast-ui.grid/docs/en/getting-started.md"
-        target="_blank"
-        >here</a
-      >
-      <br>
-      <strong>The example code can be slower than your environment because the code is transpiled by babel-standalone in runtime.</strong>
-    </div>
-    
-    <div class="code-html contents">
-      <div id="grid"></div>
-    </div>
-  </body>
-  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
-  <script type="text/javascript" src="../dist/tui-grid.js"></script>
-  <script type="text/javascript" src="./data/basic-dummy.js"></script>
-  <script type="text/babel" class="code-js">
-    const grid = new tui.Grid({
-      el: document.getElementById('grid'),
-      data: gridData,
-      scrollX: false,
-      scrollY: false,
-      columns: [
-        {
-          header: 'Name',
-          name: 'name',
-          sortable: true,
-          filter: 'text',
-          rowSpan: true
-        },
-        {
-          header: 'Artist',
-          name: 'artist',
-          sortable: true,
-          filter: 'text',
-          rowSpan: true
-        },
-        {
-          header: 'Type',
-          name: 'type',
-          sortable: true,
-          filter: 'select',
-          rowSpan: true
-        },
-        {
-          header: 'Release',
-          name: 'release',
-          sortable: true,
-          rowSpan: true
-        },
-        {
-          header: 'Genre',
-          name: 'genre',
-          sortable: true,
-          rowSpan: true
-        }
-      ],
-      draggable: true
+        <style>
+            #target,
+            #source {
+                border: 1px solid black;
+                padding: 0.5rem;
+            }
+
+            .dragging {
+                background-color: pink;
+            }
+        </style>
+</head>
+
+<body>
+
+<div>
+    <p id="source" draggable="true">
+        Select this element, drag it to the drop zone and then release the selection
+        to move the element.
+    </p>
+</div>
+<div id="target">Drop Zone</div>
+<button id="reset">Reset example</button>
+<div class="code-html contents">
+    <div id="grid" data-attribute ></div>
+</div>
+
+
+
+</body>
+<script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+<script type="text/javascript" src="../dist/tui-grid.js"></script>
+<script type="text/javascript" src="./data/basic-dummy.js"></script>
+<script type="text/babel" class="code-js">
+
+    const source = document.querySelector("#source");
+    source.addEventListener("dragstart", (ev) => {
+        console.log("dragStart");
+        ev.currentTarget.classList.add("dragging");
+        ev.dataTransfer.clearData();
+        ev.dataTransfer.setData("text/plain", ev.target.id);
     });
-  </script>
+    source.addEventListener("dragend", (ev) =>
+        ev.target.classList.remove("dragging"),
+    );
+
+    const target = document.querySelector("#target");
+    target.addEventListener("dragover", (ev) => {
+        ev.preventDefault();
+    });
+    target.addEventListener("drop", (ev) => {
+        console.log("Drop");
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text");
+        const source = document.getElementById(data);
+        ev.target.appendChild(source);
+    });
+
+    const reset = document.querySelector("#reset");
+    reset.addEventListener("click", () => document.location.reload());
+
+    const grid = new tui.Grid({
+        el: document.getElementById('grid'),
+        data: gridData,
+        scrollX: false,
+        scrollY: false,
+        columns: [
+            {
+                header: 'Name',
+                name: 'name',
+                sortable: true,
+                filter: 'text',
+                rowSpan: true
+            },
+            {
+                header: 'Artist',
+                name: 'artist',
+                sortable: true,
+                filter: 'text',
+                rowSpan: true
+            },
+            {
+                header: 'Type',
+                name: 'type',
+                sortable: true,
+                filter: 'select',
+                rowSpan: true
+            },
+            {
+                header: 'Release',
+                name: 'release',
+                sortable: true,
+                rowSpan: true
+            },
+            {
+                header: 'Genre',
+                name: 'genre',
+                sortable: true,
+                rowSpan: true
+            }
+        ],
+        draggable: true
+    });
+
+    grid.on('drop', ev => {
+
+    });
+
+    target.addEventListener('gridDropEvent',(event) => {
+        console.log('event Custom drop event occurred', event.detail.customData);
+        const objText = JSON.stringify(event.detail.customData, null, 10);
+        target.innerText += objText;
+    });
+
+</script>
 </html>

@@ -14,6 +14,7 @@ export interface PosInfo {
   scrollLeft: number;
   scrollTop: number;
   container?: HTMLElement;
+  rowKey?: RowKey;
 }
 
 export interface DraggableRowInfo {
@@ -57,9 +58,10 @@ interface FloatingRowOffsets {
 const EXCEED_RATIO = 0.8;
 const ADDITIONAL_HEIGHT = 10;
 
+// drag 할 때 보이는 row html
 function createRow(height: string) {
+  // console.log('createRow >> ')
   const row = document.createElement('div');
-
   row.className = cls('floating-row');
   row.style.height = height;
   row.style.lineHeight = height;
@@ -78,12 +80,12 @@ function createColumn(height: number, width: number) {
   return column;
 }
 
+//로우 선택해서 drag 할 때 보여지는 floating-row에 td 값을 붙인다.
 export function createCells(cell: Element) {
   const childLen = cell.childNodes.length;
   const el = document.createElement('div');
   el.className = cls('floating-cell', 'cell-header');
   el.style.width = window.getComputedStyle(cell).width;
-
   for (let i = 0; i < childLen; i += 1) {
     // the cell is not complex structure, so there is no the performance problem
     el.appendChild(cell.childNodes[i].cloneNode(true));
@@ -121,11 +123,11 @@ function createFloatingDraggableRow(
   const { data, column, id } = store;
   const { treeColumnName } = column;
   const cells = fromArray(posInfo.container!.querySelectorAll(`[data-row-key="${rowKey}"]`));
-
+  // console.log('createFloatingDraggableRow  cells >> ', cells)
   // get original table row height
   const height = `${cells[0].parentElement!.clientHeight}px`;
   const row = createRow(height);
-
+//console.log('createFloatingDraggableRow row >> ',row)
   row.style.left = `${offsetLeft}px`;
   row.style.top = `${offsetTop}px`;
 
@@ -136,6 +138,7 @@ function createFloatingDraggableRow(
     row.appendChild(createTreeCell(treeColumnName, viewRow));
   } else {
     cells.forEach((cell) => {
+      // 로우 선택해서 drag 할 때 보여지는 floating-row에 td 값을 붙인다.
       row.appendChild(createCells(cell));
     });
   }
@@ -159,6 +162,8 @@ function createFloatingDraggableColumn(store: Store, colunmName: string, posInfo
 }
 
 export function createDraggableRowInfo(store: Store, posInfo: PosInfo): DraggableRowInfo | null {
+//  console.log('createDraggableRowInfo >> ')
+
   const { data, dimension } = store;
   const { rawData, filters } = data;
 
@@ -191,9 +196,11 @@ export function createDraggableColumnInfo(store: Store, posInfo: PosInfo): Dragg
 
 export function getMovedPosAndIndexOfRow(
   store: Store,
-  { pageX, pageY, left, top, scrollTop }: PosInfo
+  { pageX, pageY, left, top, scrollTop, rowKey }: PosInfo
 ): MovedIndexAndPosInfoOfRow {
-  const { rowCoords, dimension, column, data } = store;
+
+// console.log('rowKey  getMovedPosAndIndexOfRow  >> ', rowKey)
+  const { rowCoords, dimension, column, data, id } = store;
   const { heights, offsets } = rowCoords;
   const { rawData } = data;
   const { headerHeight } = dimension;
@@ -203,11 +210,20 @@ export function getMovedPosAndIndexOfRow(
 
   // move to next index when exceeding the height with ratio
   if (!column.treeColumnName) {
+    // grid 안에서 이동할 때
+    // index 선택 로우
     if (index < rawData.length - 1 && offsetTop - offsets[index] > heights[index] * EXCEED_RATIO) {
+      // console.log("getMovedPosAndIndexOfRow >> index < rawData.length - 1   > ", index < rawData.length - 1 )
+      // console.log("getMovedPosAndIndexOfRow >> offsetTop - offsets[index] > heights[index] * EXCEED_RATIO   > ", offsetTop - offsets[index] > heights[index] * EXCEED_RATIO )
       index += 1;
+
+    } else if ((offsetTop - heights[index] <= -heights[index]) || (offsetTop - heights[index] >= offsets[index] ) ) {
+      if (rowKey !== undefined) {
+        index = +rowKey;
+      }
+      // console.log('getMovedPosAndIndexOfRow out of grid >> ',rowKey ,id, index, offsetLeft, offsetTop, store)
     }
   }
-
   let height = offsets[index] - scrollTop + headerHeight;
   let moveToLast = false;
   // resolve the height for moving to last index with tree data
@@ -274,8 +290,12 @@ export function getResolvedOffsets(
 ) {
   const { width: bodyWidth, bodyHeight, scrollXHeight } = dimension;
 
+  
   return {
-    offsetLeft: clamp(offsetLeft, 0, bodyWidth - width),
-    offsetTop: clamp(offsetTop, 0, bodyHeight + scrollXHeight + ADDITIONAL_HEIGHT),
+    offsetLeft,
+    offsetTop
+    // as-is : drag 할 때 grid 내에서만 움직임
+    // offsetLeft: clamp(offsetLeft, 0, bodyWidth - width),
+    // offsetTop: clamp(offsetTop, 0, bodyHeight + scrollXHeight + ADDITIONAL_HEIGHT),
   };
 }

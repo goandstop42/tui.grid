@@ -52,6 +52,8 @@ export interface GridEventProps {
   data?: string[][];
   complexHeaderData?: string[][] | null;
   exportFn?: (data: string[][]) => void;
+  clientX?: number;
+  clientY?: number;
 }
 
 export class TuiGridEvent {

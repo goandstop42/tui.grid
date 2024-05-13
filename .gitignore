@@ -61,3 +61,4 @@ karma.conf.local.js
 dist/
 .env
 !_*/dist/
+/pnpm-lock.yaml

@@ -165,12 +165,15 @@ class BodyAreaComp extends Component<Props> {
     }
   };
 
+  // mouse move 할 때 실행되는 함수
   private dragRow = (ev: MouseEvent) => {
     const [pageX, pageY] = getCoordinateWithOffset(ev.pageX, ev.pageY);
-
+    console.log("dragRow  >> ", ev)
     if (this.moveEnoughToTriggerDragEvent({ pageX, pageY })) {
       const { el, boundingRect, props } = this;
       const { scrollTop, scrollLeft } = el!;
+      const { row, rowKey } = this.draggableInfo!;
+      // floating-row가 움직임에 따라 이동하는 tr
       const movedPosAndIndex = getMovedPosAndIndexOfRow(this.context.store, {
         scrollLeft,
         scrollTop,
@@ -178,10 +181,11 @@ class BodyAreaComp extends Component<Props> {
         top: boundingRect!.top,
         pageX,
         pageY,
+        rowKey
       });
       const { index, targetRow } = movedPosAndIndex;
       const rowKeyToMove = targetRow.rowKey;
-      const { row, rowKey } = this.draggableInfo!;
+
       const { offsetLeft, offsetTop } = getResolvedOffsets(
         this.context.store,
         movedPosAndIndex,
@@ -194,6 +198,7 @@ class BodyAreaComp extends Component<Props> {
       if (props.hasTreeColumn) {
         this.setTreeMovedIndexInfo(movedPosAndIndex);
       } else {
+        // drag에 따라 이동되는 tr
         // move the row to next index
         this.movedIndexInfo = { index, rowKey: rowKeyToMove, appended: false };
         this.props.dispatch('moveRow', rowKey, index);
@@ -204,7 +209,6 @@ class BodyAreaComp extends Component<Props> {
         targetRowKey: this.movedIndexInfo!.rowKey,
         appended: this.movedIndexInfo!.appended,
       });
-
       /**
        * Occurs when dragging the row
        * @event Grid#drag
@@ -213,7 +217,9 @@ class BodyAreaComp extends Component<Props> {
        * @property {RowKey} targetRowKey - The rowKey of the row at current dragging position
        * @property {boolean} appended - Whether the row is appended to other row as the child in tree data.
        */
+
       this.props.eventBus.trigger('drag', gridEvent);
+
     }
   };
 
@@ -240,11 +246,21 @@ class BodyAreaComp extends Component<Props> {
   }
 
   private startToDragRow = (posInfo: PosInfo) => {
+    // console.log('startToDragRow start >> ')
+
+    let mouseX;
+    let mouseY;
+    document.addEventListener("mousemove", function(event) {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+      // console.log("Mouse X:", mouseX, "Mouse Y:", mouseY);
+    });
+
     const container = this.el.parentElement!.parentElement!;
     posInfo.container = container;
     this.props.dispatch('resetRowSpan');
     const draggableInfo = createDraggableRowInfo(this.context.store, posInfo);
-
+    // console.log('draggableInfo >> ', draggableInfo)
     if (draggableInfo) {
       const { row, rowKey, line } = draggableInfo;
       const gridEvent = new GridEvent({ rowKey, floatingRow: row });
@@ -258,6 +274,8 @@ class BodyAreaComp extends Component<Props> {
       this.props.eventBus.trigger('dragStart', gridEvent);
 
       if (!gridEvent.isStopped()) {
+        console.log('startToDragRow >>', row)
+        //drag 용 html 를 붙인다.
         container.appendChild(row);
 
         const { clientWidth, clientHeight } = row;
@@ -273,7 +291,7 @@ class BodyAreaComp extends Component<Props> {
         this.props.dispatch('setFocusInfo', null, null, false);
         this.props.dispatch('initSelection');
 
-        document.addEventListener('mousemove', this.dragRow);
+        document.addEventListener('mousemove', this.dragRow, );
         document.addEventListener('mouseup', this.dropRow);
         document.addEventListener('selectstart', this.handleSelectStart);
       }
@@ -292,8 +310,8 @@ class BodyAreaComp extends Component<Props> {
   }
 
   private handleMouseDown = (ev: MouseEvent) => {
+    // console.log('handleMouseDown >> ')
     const targetElement = ev.target as HTMLElement;
-
     if (
       !this.el ||
       targetElement === this.el ||
@@ -369,13 +387,13 @@ class BodyAreaComp extends Component<Props> {
     }
   };
 
-  private dropRow = () => {
+  private dropRow = (ev:MouseEvent) => {
     const { hasTreeColumn } = this.props;
     const { rowKey } = this.draggableInfo!;
-
+    let targetRowInfo;
     if (this.movedIndexInfo) {
       const { index, rowKey: targetRowKey, appended, moveToLast = false } = this.movedIndexInfo;
-      const gridEvent = new GridEvent({ rowKey, targetRowKey, appended });
+      const gridEvent = new GridEvent({ rowKey, targetRowKey, appended, clientX:ev.pageX, clientY:ev.pageY });
       /**
        * Occurs when dropping the row
        * @event Grid#drop
@@ -392,6 +410,8 @@ class BodyAreaComp extends Component<Props> {
         } else {
           this.props.dispatch('moveRow', rowKey, index);
         }
+        // @ts-ignore
+        targetRowInfo = gridEvent.instance.dataManager.getOriginData()[gridEvent.targetRowKey]
       }
     }
     this.props.dispatch('removeRowClassName', rowKey, DRAGGING_CLASS);
@@ -400,7 +420,16 @@ class BodyAreaComp extends Component<Props> {
     }
     // clear floating element and draggable info
     this.clearDraggableInfo();
+
     this.props.dispatch('updateRowSpan');
+
+    const customEvent = new CustomEvent('gridDropEvent', {
+        detail: {
+            customData: targetRowInfo
+        }
+    });
+    const element = document.elementFromPoint(ev.clientX, ev.clientY);
+    element!.dispatchEvent(customEvent);
   };
 
   private clearDraggableInfo() {
@@ -475,7 +504,7 @@ class BodyAreaComp extends Component<Props> {
       width: totalColumnWidth + (side === 'R' ? 0 : cellBorderWidth),
       height: totalRowHeight ? totalRowHeight + cellBorderWidth : '100%',
     };
-
+    // console.log('render >>');
     return (
       <div
         class={cls('body-area')}
