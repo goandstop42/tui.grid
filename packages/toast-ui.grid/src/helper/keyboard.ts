@@ -20,6 +20,7 @@ export const keyNameMap = {
   36: 'home',
   35: 'end',
   46: 'del',
+  113: 'f2'
 } as const;
 
 export const keyboardEventTypeMap = {
@@ -67,6 +68,7 @@ export const keyStrokeCommandMap: {
   pageDown: ['move', 'pageDown'],
   home: ['move', 'firstColumn'],
   end: ['move', 'lastColumn'],
+  f2: ['edit', 'currentCell'],
   enter: ['edit', 'currentCell'],
   space: ['edit', 'currentCell'],
   tab: ['edit', 'nextCell'],
@@ -123,12 +125,14 @@ export function getKeyStrokeString(ev: KeyboardEvent): KeyStrokeCommandType {
   if (keyCode in keyNameMap) {
     keys.push(keyNameMap[keyCode as KeyCodeType]);
   }
+  // console.log("keys >> ",keys.join('-'))
 
   return keys.join('-');
 }
 
 export function keyEventGenerate(ev: KeyboardEvent) {
   const keyStroke = getKeyStrokeString(ev);
+  // console.log('keyStroke >> ', keyStroke)
   const commandInfo = keyStrokeCommandMap[keyStroke];
 
   return commandInfo
