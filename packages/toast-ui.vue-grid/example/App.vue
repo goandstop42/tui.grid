@@ -2,6 +2,7 @@
   <div class="container">
     <h1>🍞🔡 TOAST UI Grid + Vue</h1>
     <grid
+      ref="grid"
       :data="gridProps.data"
       :columns="gridProps.columns"
       :options="gridProps.options"
@@ -10,7 +11,9 @@
       @uncheck="onUnCheck"
       :rowHeaders="gridProps.rowHeaders"
       :columnOptions="gridProps.columnOptions"
+      :draggable="true"
     ></grid>
+    <div id="target">Drop Zone</div>
   </div>
 </template>
 <script>
@@ -80,6 +83,7 @@ export default {
           },
         },
       ],
+
       data: [
         {
           name: 'Kiss and Make Up',
@@ -163,8 +167,31 @@ export default {
       console.log('uncheck event: ', ev);
     },
   },
+
+  mounted() {
+    console.log('this.$refs.grid.gridInstance >> ', this.$refs.grid.gridInstance);
+    this.$refs.grid.gridInstance.on('drop', () => {
+      console.log('drop event occurred');
+      const target = document.getElementById('target');
+      console.log('target >> ', target);
+      target.addEventListener('gridDropEvent', (event) => {
+        console.log('event Custom drop event occurred', event.detail.customData);
+        const objText = JSON.stringify(event.detail.customData, null, 10);
+        target.innerText += objText;
+      });
+    });
+  },
 };
 </script>
 <style>
 @import 'https://uicdn.toast.com/tui-grid/latest/tui-grid.css';
+#target,
+#source {
+  border: 1px solid black;
+  padding: 0.5rem;
+}
+
+.dragging {
+  background-color: pink;
+}
 </style>

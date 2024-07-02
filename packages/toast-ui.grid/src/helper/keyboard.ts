@@ -20,7 +20,7 @@ export const keyNameMap = {
   36: 'home',
   35: 'end',
   46: 'del',
-  113: 'f2'
+  113: 'f2',
 } as const;
 
 export const keyboardEventTypeMap = {

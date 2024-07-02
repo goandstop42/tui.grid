@@ -963,7 +963,7 @@ export function setRows(store: Store, rows: OptRow[]) {
 }
 
 export function moveRow(store: Store, rowKey: RowKey, targetIndex: number) {
-//  console.log('moveRow start typeof rowKey >> ', typeof rowKey, targetIndex, rowKey)
+  //  console.log('moveRow start typeof rowKey >> ', typeof rowKey, targetIndex, rowKey)
   const { data, column, id } = store;
   const { rawData, viewData } = data;
 

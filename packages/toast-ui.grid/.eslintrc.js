@@ -17,7 +17,8 @@ module.exports = {
     parser: 'typescript-eslint-parser',
   },
   rules: {
-    "prettier/prettier": ["error", { "endOfLine": "auto" }],
+    'no-alert': 'off',
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'prefer-destructuring': 0,
     'newline-before-return': 0,
     'padding-line-between-statements': 0,

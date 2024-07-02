@@ -6,10 +6,15 @@
   },
   "devDependencies": {
     "@toast-ui/release-notes": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "^7.15.0",
+    "css-loader": "^7.1.2",
+    "eslint": "^8.56.0",
     "lerna": "^3.16.4",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "style-loader": "^4.0.0"
   },
   "scripts": {
+    "eslint": "npx eslint '**/*.{ts,tsx}' --fix",
     "build": "lerna run build --scope tui-grid",
     "build:react": "lerna run build --scope @toast-ui/react-grid",
     "build:vue": "lerna run build --scope @toast-ui/vue-grid",

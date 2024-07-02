@@ -14,14 +14,12 @@ function getTestUrls() {
   }
   const urlPrefix = 'http://nhn.github.io/tui.grid/latest';
 
-
   const testUrls = fs.readdirSync(filePath).reduce((urls, fileName) => {
     if (/html$/.test(fileName)) {
       urls.push(`${urlPrefix}/${filePath}/${fileName}`);
     }
     return urls;
   }, []);
-
 
   fs.writeFileSync('url.txt', testUrls.join(', '));
 }

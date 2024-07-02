@@ -165,7 +165,7 @@ export function dragEnd({ selection }: Store) {
 }
 
 export function mouseDownBody(store: Store, elementInfo: ElementInfo, eventInfo: EventInfo) {
-//  console.log('mouseDownBody  >> ')
+  //  console.log('mouseDownBody  >> ')
   const { data, column, columnCoords, rowCoords, id } = store;
   const { filteredRawData } = data;
 

@@ -42,6 +42,7 @@ const commonConfig = {
     path: path.resolve(__dirname, 'dist'),
   },
 };
+
 module.exports = (env, { mode }) => {
   if (mode === 'production') {
     const { version, author, license } = package;
@@ -63,7 +64,6 @@ module.exports = (env, { mode }) => {
         rules: [
           {
             test: /\.css$/,
-            exclude: /node_modules(?!\/@toast-ui\/select-box)/,
             use: [MiniCssExtractPlugin.loader, 'css-loader'],
           },
         ],

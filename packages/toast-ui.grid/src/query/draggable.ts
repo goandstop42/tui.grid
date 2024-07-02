@@ -1,7 +1,8 @@
+/* eslint-disable */
 import { ColumnInfo } from '@t/store/column';
 import { Store } from '@t/store';
 import { RowKey, ViewRow, Row } from '@t/store/data';
-import { findOffsetIndex, fromArray, clamp } from '../helper/common';
+import { findOffsetIndex, fromArray } from '../helper/common';
 import { cls } from '../helper/dom';
 import { findIndexByRowKey } from './data';
 import { findColumnIndexByPosition } from './mouse';
@@ -56,7 +57,7 @@ interface FloatingRowOffsets {
 }
 
 const EXCEED_RATIO = 0.8;
-const ADDITIONAL_HEIGHT = 10;
+// const ADDITIONAL_HEIGHT = 10;
 
 // drag 할 때 보이는 row html
 function createRow(height: string) {
@@ -127,7 +128,7 @@ function createFloatingDraggableRow(
   // get original table row height
   const height = `${cells[0].parentElement!.clientHeight}px`;
   const row = createRow(height);
-//console.log('createFloatingDraggableRow row >> ',row)
+  //console.log('createFloatingDraggableRow row >> ',row)
   row.style.left = `${offsetLeft}px`;
   row.style.top = `${offsetTop}px`;
 
@@ -162,7 +163,7 @@ function createFloatingDraggableColumn(store: Store, colunmName: string, posInfo
 }
 
 export function createDraggableRowInfo(store: Store, posInfo: PosInfo): DraggableRowInfo | null {
-//  console.log('createDraggableRowInfo >> ')
+  //  console.log('createDraggableRowInfo >> ')
 
   const { data, dimension } = store;
   const { rawData, filters } = data;
@@ -198,9 +199,8 @@ export function getMovedPosAndIndexOfRow(
   store: Store,
   { pageX, pageY, left, top, scrollTop, rowKey }: PosInfo
 ): MovedIndexAndPosInfoOfRow {
-
-// console.log('rowKey  getMovedPosAndIndexOfRow  >> ', rowKey)
-  const { rowCoords, dimension, column, data, id } = store;
+  // console.log('rowKey  getMovedPosAndIndexOfRow  >> ', rowKey)
+  const { rowCoords, dimension, column, data } = store;
   const { heights, offsets } = rowCoords;
   const { rawData } = data;
   const { headerHeight } = dimension;
@@ -216,10 +216,12 @@ export function getMovedPosAndIndexOfRow(
       // console.log("getMovedPosAndIndexOfRow >> index < rawData.length - 1   > ", index < rawData.length - 1 )
       // console.log("getMovedPosAndIndexOfRow >> offsetTop - offsets[index] > heights[index] * EXCEED_RATIO   > ", offsetTop - offsets[index] > heights[index] * EXCEED_RATIO )
       index += 1;
-
-    } else if ((offsetTop - heights[index] <= -heights[index]) || (offsetTop - heights[index] >= offsets[index] ) ) {
-      if (rowKey !== undefined) {
-        index = +rowKey;
+    } else if (
+      offsetTop - heights[index] <= -heights[index] ||
+      offsetTop - heights[index] >= offsets[index]
+    ) {
+      if (rowKey !== null) {
+        index = Number(rowKey);
       }
       // console.log('getMovedPosAndIndexOfRow out of grid >> ',rowKey ,id, index, offsetLeft, offsetTop, store)
     }
@@ -290,10 +292,9 @@ export function getResolvedOffsets(
 ) {
   const { width: bodyWidth, bodyHeight, scrollXHeight } = dimension;
 
-  
   return {
     offsetLeft,
-    offsetTop
+    offsetTop,
     // as-is : drag 할 때 grid 내에서만 움직임
     // offsetLeft: clamp(offsetLeft, 0, bodyWidth - width),
     // offsetTop: clamp(offsetTop, 0, bodyHeight + scrollXHeight + ADDITIONAL_HEIGHT),
