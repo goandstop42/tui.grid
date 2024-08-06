@@ -116,15 +116,16 @@
       columns: [
         {
           header: 'Name',
-          name: 'name'
-        },
-        {
-          header: 'Artist',
-          name: 'artist'
+          name: 'name',
+          editor:'text',
+          width: 100,
+          fixedWidth: true,
+          minWidth: 20
         },
         {
           header: 'Type',
-          name: 'type'
+          name: 'type',
+          width: 70
         },
         {
           header: 'Release',
@@ -144,5 +145,63 @@
     grid.on('uncheck', function(ev) {
       console.log('uncheck', ev);
     });
+
+
+    const currentColumns = grid.getColumns();
+    console.log('grid >> ', grid);
+    console.log('getColoumns >> ', currentColumns);
+    const columns = [    {
+      header: 'Artist',
+      name: 'artist',
+      editor:'text',
+      baseWidth: 100
+    }];
+    // currentColumns.unshift(...columns)
+
+    // grid.setColumns(currentColumns);
+
+const nesCol =    {
+      "name": "newCol",
+              "header": "newCol",
+              "editor":'text',
+              "width": 100,
+              "hidden": false,
+              "resizable": false,
+              "align": "left",
+              "fixedWidth": false,
+              "copyOptions": {},
+      "baseWidth": 0,
+              "minWidth": 50,
+              "relationMap": {},
+      "related": false,
+              "sortingType": "asc",
+              "validation": {},
+      "renderer": {},
+      "valign": "middle",
+              "headerAlign": "center",
+              "headerVAlign": "middle",
+              "filter": null,
+              "headerRenderer": null,
+              "disabled": false,
+              "autoResizing": false,
+              "rowSpan": false
+    }
+
+
+
+    // console.log ('store baseWidth 1 >> ', grid.store.column.allColumnMap['name'].baseWidth)
+    // grid.store.column.allColumnMap['name'].baseWidth= 300
+    grid.store.column.allColumnMap['newCol'] = nesCol;
+    // grid.store.column.allColumns.push(grid.store.column.allColumnMap['nesCol'])
+    grid.store.column.allColumns.push(nesCol)
+
+    console.log ('store column 1 >> ', grid.store.column)
+    console.log ('store nesCol 2 >> ', grid.store.column.allColumnMap['genre'])
+    console.log ('store newCol 2 >> ', grid.store.column.allColumnMap['newCol'])
+
+    // console.log('getColoumns 2>> ', grid.getColumns());
+    // console.log ('store column 1>> ', grid.store.column)
+
+    // console.log ('store column 2>> ', grid.store.column)
   </script>
 </html>

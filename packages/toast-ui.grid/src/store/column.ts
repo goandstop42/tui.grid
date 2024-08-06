@@ -482,6 +482,7 @@ export function create({
     },
 
     get allColumnMap() {
+      console.log('this.allColumns >> ', this.allColumns)
       return createMapFromArray(this.allColumns, 'name') as Dictionary<ColumnInfo>;
     },
 
