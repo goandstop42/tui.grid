@@ -116,18 +116,25 @@ export function createRowSpan(
 ): RowSpan {
   return { mainRow, mainRowKey: rowKey, count, spanCount };
 }
-
+let createViewCellCallCount = 0;
 function createViewCell(
+  type: string,
   id: number,
   row: Row,
   column: ColumnInfo,
   { isDataModified = false, prevInvalidStates, relationInfo = {} }: ViewCellCreationOpt
 ): CellRenderData {
+  createViewCellCallCount++;
   const { relationMatched = true, relationListItems } = relationInfo;
   const { name, formatter, editor, validation, defaultValue } = column;
   let value = isRowHeader(name) ? getRowHeaderValue(row, name) : row[name];
 
+  console.log("type >> createViewCellCallCount >>  ", createViewCellCallCount,  type, name, formatter, defaultValue, value);
+
+
+//console.log("createViewCell row >> ", row)
   if (isNil(value) && !isNil(defaultValue)) {
+
     value = defaultValue;
   }
 
@@ -158,7 +165,8 @@ function createViewCell(
   const invalidStates = usePrevInvalidStates
     ? (prevInvalidStates as ErrorInfo[])
     : getValidationCode({ id, value: row[name], row, validation, columnName: name });
-
+console.log("  ")
+console.log("type 2 >> ", getFormattedValue(formatterProps, formatter, value, relationListItems))
   return {
     editable: !!editor,
     className,
@@ -175,6 +183,7 @@ function createRelationViewCell(
   row: Row,
   { columnMap, valueMap }: ViewCellInfo
 ) {
+
   const { editable, disabled, value } = valueMap[name];
   const { relationMap = {} } = columnMap[name];
 
@@ -196,13 +205,13 @@ function createRelationViewCell(
       ? someProp('value', targetValue, targetListItems)
       : true;
 
-    const cellData = createViewCell(id, row, columnMap[targetName], {
+    const cellData = createViewCell('cellData',id, row, columnMap[targetName], {
       relationInfo: {
         relationMatched,
         relationListItems: targetListItems,
       },
     });
-
+    console.log("cellData >> ", cellData)
     if (!targetEditable) {
       cellData.editable = false;
     }
@@ -225,10 +234,11 @@ export function createViewRow(id: number, row: Row, rawData: Row[], column: Colu
   const { treeColumnName, treeIcon = true, treeIndentWidth } = column;
   const initValueMap: Dictionary<CellRenderData | null> = {};
 
+
   Object.keys(columnMap).forEach((name) => {
     initValueMap[name] = null;
   });
-
+  console.log("createViewRow >> ", initValueMap[name] )
   const cachedValueMap: Dictionary<CellRenderData> = {};
 
   const valueMap = observable(initValueMap) as Dictionary<CellRenderData>;
@@ -245,13 +255,38 @@ export function createViewRow(id: number, row: Row, rawData: Row[], column: Colu
       __unobserveFns__.push(
         observe((calledBy: string) => {
           const isDataModified = calledBy !== 'className';
+          // console.log("observe calledBy >> ", calledBy);
+          // console.log("observe isDataModified >> ", isDataModified);
+          // console.log("observe name >> ", name);
+          // console.log("observe id >> ", id);
+          console.log("   ");
+          console.log(" ====  ");
+          console.log("observe row >> ", row.name);
+          console.log(" ====  ");
+          console.log("   ");
+          // console.log("observe  columnMap[name] >> ", columnMap[name]);
+          // console.log("observe prevInvalidStates >> ", cachedValueMap[name]?.invalidStates);
 
-          cachedValueMap[name] = createViewCell(id, row, columnMap[name], {
+          // Call createViewCell and log the result
+          const newCell = createViewCell(name, id, row, columnMap[name], {
             isDataModified,
             prevInvalidStates: cachedValueMap[name]?.invalidStates,
           });
 
-          valueMap[name] = cachedValueMap[name];
+          cachedValueMap[name] =
+              createViewCell(name,id, row, columnMap[name], {
+            isDataModified,
+            prevInvalidStates: cachedValueMap[name]?.invalidStates,
+          });
+          console.log("observe newCell >> ", newCell);
+
+          if (newCell && cachedValueMap[name] !== newCell) {
+            console.log("observe Updating cachedValueMap and valueMap for ", name);
+            cachedValueMap[name] = newCell;
+            valueMap[name] = cachedValueMap[name];
+          } else {
+            console.log("observe No update needed for ", name);
+          }
         })
       );
     }
@@ -463,7 +498,7 @@ export function createData(
       ? ({ rowKey: row.rowKey, sortKey: row.sortKey, uniqueKey: row.uniqueKey } as ViewRow)
       : createViewRow(id, row, rawData, column)
   );
-
+  console.log("createData >> ", rawData, viewData)
   return { rawData, viewData };
 }
 
