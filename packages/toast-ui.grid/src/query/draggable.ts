@@ -203,29 +203,63 @@ export function getMovedPosAndIndexOfRow(
   const { rowCoords, dimension, column, data } = store;
   const { heights, offsets } = rowCoords;
   const { rawData } = data;
-  const { headerHeight } = dimension;
+  const { headerHeight,width } = dimension;
   const offsetLeft = pageX - left;
   const offsetTop = pageY - top + scrollTop;
   let index = findOffsetIndex(rowCoords.offsets, offsetTop);
-
+  // console.log('offsetLeft >> ', offsetLeft)
   // move to next index when exceeding the height with ratio
+
+  
+  // todo tree 에서 테스트 필요
+  // Check if the dragged item is out of the grid horizontally
+  if (offsetLeft < 0 || offsetLeft > width) {
+    index = Number(rowKey);
+    // console.log('out of the grid horizontally ', offsetLeft)
+  }
+  
   if (!column.treeColumnName) {
-    // grid 안에서 이동할 때
+    // When moving within the grid
     // index 선택 로우
     if (index < rawData.length - 1 && offsetTop - offsets[index] > heights[index] * EXCEED_RATIO) {
-      // console.log("getMovedPosAndIndexOfRow >> index < rawData.length - 1   > ", index < rawData.length - 1 )
-      // console.log("getMovedPosAndIndexOfRow >> offsetTop - offsets[index] > heights[index] * EXCEED_RATIO   > ", offsetTop - offsets[index] > heights[index] * EXCEED_RATIO )
+      // console.log("getMovedPosAndIndexOfRow >> index < rawData.length - 1   > ", index < rawData.length - 1)
       index += 1;
-    } else if (
-      offsetTop - heights[index] <= -heights[index] ||
-      offsetTop - heights[index] >= offsets[index]
-    ) {
-      if (rowKey !== null) {
-        index = Number(rowKey);
-      }
-      // console.log('getMovedPosAndIndexOfRow out of grid >> ',rowKey ,id, index, offsetLeft, offsetTop, store)
     }
   }
+  // Check if the dragged item is out of the grid vertically
+  if (
+    offsetTop - heights[index] <= -heights[index] ||
+    offsetTop - heights[index] >= offsets[index]
+  ) {
+    if (rowKey !== null) {
+      index = Number(rowKey);
+    }
+    // console.log('out of the grid vertically >> ',rowKey , index, offsetLeft, offsetTop, store)
+  }
+
+  // if (offsetLeft < 0 || offsetLeft > width) {
+  //   index = Number(rowKey);
+  //   console.log('좌우 벗어남 offsetLeft', offsetLeft )
+  // }
+
+
+  // if (!column.treeColumnName) {
+  //   // grid 안에서 이동할 때
+  //   // index 선택 로우
+  //   if (index < rawData.length - 1 && offsetTop - offsets[index] > heights[index] * EXCEED_RATIO) {
+  //     console.log("getMovedPosAndIndexOfRow >> index < rawData.length - 1   > ", index < rawData.length - 1 )
+  //     // console.log("getMovedPosAndIndexOfRow >> offsetTop - offsets[index] > heights[index] * EXCEED_RATIO   > ", offsetTop - offsets[index] > heights[index] * EXCEED_RATIO )
+  //     index += 1;
+  //   } else if (
+  //     offsetTop - heights[index] <= -heights[index] ||
+  //     offsetTop - heights[index] >= offsets[index]
+  //   ) {
+  //     if (rowKey !== null) {
+  //       index = Number(rowKey);
+  //     }
+  //     // console.log('getMovedPosAndIndexOfRow out of grid >> ',rowKey , index, offsetLeft, offsetTop, store)
+  //   }
+  // }
   let height = offsets[index] - scrollTop + headerHeight;
   let moveToLast = false;
   // resolve the height for moving to last index with tree data
@@ -291,6 +325,8 @@ export function getResolvedOffsets(
   { width }: FloatingRowSize
 ) {
   const { width: bodyWidth, bodyHeight, scrollXHeight } = dimension;
+  // const offRight = bodyWidth - (offsetLeft + width);
+  // console.log('width >> ', width, offRight)
 
   return {
     offsetLeft,
