@@ -101,7 +101,9 @@
         width: 400,
         fixedWidth: true,
         minWidth: 20
-      }
+      },
+      { name: 'score' },
+      { name: 'grade', editor: 'text' }
     ]
 
     const transTypeColumn = [
@@ -109,12 +111,13 @@
         header: '상태',
         name: 'status',
         editor:'text',
+        width: 50,
       },
     ]
-    const shouldAddTransTypeColumn = false; // 조건 설정 (true/false 또는 동적으로 조건 설정)
+    const shouldAddTransTypeColumn = true; // 조건 설정 (true/false 또는 동적으로 조건 설정)
 
     if (shouldAddTransTypeColumn) {
-      columnsData.push(...transTypeColumn);
+      columnsData.unshift(...transTypeColumn);
       // 또는 columnsData = columnsData.concat(transTypeColumn);
     }
     const grid = new tui.Grid({
@@ -137,7 +140,8 @@
       { name: 'grade', editor: 'text' },
     ];
 
-    grid.setColumns(columns);
+    grid.setColumns(columnsData);
+
     grid.on('check', function(ev) {
       console.log('check', ev);
     });
@@ -163,6 +167,8 @@
       const removedRow = grid.store.data.rawData.find(row => row.rowKey === focusedCell.rowKey);
 
       console.log('removedRow >> ', removedRow, grid.getData());
+      removedRow.status = 'D'
+      console.log("removedRow >> ", removedRow)
 
       // grid.removeRowTest(focusedCell.rowKey);  // 필요 시 주석 해제
 
@@ -171,32 +177,6 @@
       }
 
       console.log("removeTest >> modifieds ", grid.getModifiedRows());
-    }
-    function remove3(){
-      const nesCol =     {
-                id: 549731,
-                name: 'Beautiful Lies',
-                artist: 'Birdy',
-                release: '2016.03.26',
-                type: 'Deluxe',
-                typeCode: '1',
-                genre: 'Pop',
-                genreCode: '1',
-                grade: '2',
-                price: 10000,
-                downloadCount: 1000,
-                listenCount: 5000,
-              }
-      grid.dataManager.push('DELETE', [nesCol])
-      console.log('grid.remove3 viewData() >> ', grid.store.data.viewData )
-      console.log('grid.remove3 rawData() >> ', grid.store.data.rawData )
-      grid.store.data.viewData .splice(0, 1);
-      grid.store.data.rawData .splice(0, 1);
-      console.log('grid.remove3 after slice viewData() >> ', grid.store.data.viewData )
-      console.log('grid.remove3 after slice rawData() >> ', grid.store.data.rawData )
-      console.log('grid.getModifiedRows() >> ', grid.getModifiedRows())
-      console.log('>>>>>>> ' )
-      grid.refreshLayout()
     }
   </script>
 </html>
