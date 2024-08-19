@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>3. Custom Editor</title>
+    <link rel="stylesheet" type="text/css" href="./css/tui-example-style.css" />
+    <link rel="stylesheet" type="text/css" href="../dist/tui-grid.css" />
+    <style>
+        .scrollable-container {
+            height: 200px;
+            /*position: relative; !* Important for sticky positioning *!*/
+            /*overflow: scroll; !* Make sure this is not set to hidden *!*/
+            overflow: auto; /* Hide the default scroll bars */
+            background-color: blue;
+            z-index: 0;
+        }
+    </style>
+  </head>
+
+  <body>
+    <div class="description">
+      You can see the tutorial
+      <a
+        href="https://github.com/nhn/tui.grid/blob/master/packages/toast-ui.grid/docs/en/custom-editor.md"
+        target="_blank"
+        >here</a
+      >.
+      <br/>
+      <strong>The example code can be slower than your environment because the code is transpiled by babel-standalone in runtime.</strong>
+    </div>
+
+    <div class="code-html contents">
+
+<!--        <div class="tui-grid-header-area" style="height: 40px;">-->
+<!--            <table class="tui-grid-table">-->
+<!--                <colgroup>-->
+<!--                    <col data-column-name="c4" style="width: 450px;">-->
+<!--                    <col data-column-name="c4" style="width: 450px;">-->
+<!--                    <col data-column-name="c4" style="width: 450px;">-->
+<!--                    <col data-column-name="c4" style="width: 449px;">-->
+<!--                </colgroup>-->
+<!--                <tbody>-->
+<!--                <tr style="height: 40px;">-->
+<!--                    <th data-column-name="artist" class="tui-grid-cell tui-grid-cell-header" style="text-align: center; vertical-align: middle;">Artist</th>-->
+<!--                    <th data-column-name="typeCode" class="tui-grid-cell tui-grid-cell-header" style="text-align: center; vertical-align: middle;">Type</th>-->
+<!--                    <th data-column-name="genreCode" class="tui-grid-cell tui-grid-cell-header" style="text-align: center; vertical-align: middle;">Genre</th>-->
+<!--                    <th data-column-name="grade" class="tui-grid-cell tui-grid-cell-header" style="text-align: center; vertical-align: middle;">Grade</th>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--            <div class="tui-grid-column-resize-container" style="display: block; margin-top: -35px; height: 35px;"></div>-->
+<!--        </div>-->
+      <div id="scrollableContainer" class= "scrollable-container">
+<!--      <div style="height: 200px">-->
+        <div id="grid"></div>
+      </div>
+        <button type="button" onclick="addRow()">add
+        </button>
+        <button type="button" onclick="removeRow2()">remove2
+        </button>
+        <button type="button" onclick="getModify()">getModify
+        </button>
+        <button type="button" onclick="appendRow()">appendRow
+        </button>
+    </div>
+
+  </body>
+  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  <script type="text/javascript" src="../dist/tui-grid.js"></script>
+  <script type="text/javascript" src="./data/basic-dummy.js"></script>
+  <script type="text/babel" class="code-js">
+
+    class CustomTextEditor {
+      constructor(props) {
+        const el = document.createElement('input');
+        const { maxLength } = props.columnInfo.editor.options;
+
+        el.type = 'text';
+        el.maxLength = maxLength;
+        el.value = String(props.value);
+
+        this.el = el;
+      }
+
+      getElement() {
+        return this.el;
+      }
+
+      getValue() {
+        return this.el.value;
+      }
+
+      mounted() {
+        this.el.select();
+      }
+    }
+
+    const grid = new tui.Grid({
+      el: document.getElementById('grid'),
+      // bodyHeight: "fitToParent",
+        scrollX: false,
+        scrollY: false,
+       columns: [
+         {
+           header: '상태',
+           name: 'status',
+           width: 70,
+           align: 'center'
+         },
+        {
+          header: 'Artist',
+          name: 'artist',
+          editor: { type: 'text' }
+        },
+        {
+          header: 'Type',
+          name: 'typeCode',
+          formatter: 'listItemText',
+          editor: {
+            type: 'select',
+            options: {
+              listItems: [
+                { text: 'Deluxe', value: '1' },
+                { text: 'EP', value: '2' },
+                { text: 'Single', value: '3' }
+              ]
+            }
+          }
+        },
+        {
+          header: 'Genre',
+          name: 'genreCode',
+          formatter: 'listItemText',
+          editor: {
+            type: 'checkbox',
+            options: {
+              listItems: [
+                { text: 'Pop', value: '1' },
+                { text: 'Rock', value: '2' },
+                { text: 'R&B', value: '3' },
+                { text: 'Electronic', value: '4' },
+                { text: 'etc.', value: '5' }
+              ]
+            }
+          },
+          copyOptions: {
+            useListItemText: true // when this option is used, the copy value is concatenated text
+          }
+        },
+        {
+          header: 'Grade',
+          name: 'grade',
+          copyOptions: {
+            useListItemText: true
+          },
+          formatter: 'listItemText',
+          editor: {
+            type: 'radio',
+            options: {
+              listItems: [
+                { text: '★☆☆', value: '1' },
+                { text: '★★☆', value: '2' },
+                { text: '★★★', value: '3' }
+              ]
+            }
+          }
+        }
+      ]
+    });
+    grid.on('beforeChange', ev => {
+      console.log('before change:', ev);
+      // grid.appendRows(createRows());
+    });
+    grid.on('afterChange', ev => {
+      console.log('after change:', ev);
+        // grid.appendRows(createRows());
+    })
+
+    function createRows() {
+        const rows = [];
+        for (let i = 0; i < 50; i += 1) {
+            const row = {};
+            for (let j = 0; j < 5; j += 1) {
+                row[`c${j}`] = (Math.random() * 100000000000).toFixed();
+            }
+            rows.push(row);
+        }
+        return rows;
+    }
+
+
+    tui.Grid.applyTheme('default', {
+        row: {
+            hover: {
+                background: '#FFF9E9'
+            }
+        },
+        cell: {
+            rowHeader: {
+                border: '#f0f0f0',
+                showVerticalBorder: true
+            },
+            header: {
+                border: 'white',
+                background: '#f5f5f5',
+                showVerticalBorder: true
+            },
+            normal: {
+                border: '#f0f0f0',
+                background: 'white',
+                showVerticalBorder: true
+            },
+            focused: {
+                border: '#BFBFBF'
+            }
+        }
+    });
+
+
+    // grid.resetData(gridData);
+    // console.log('getModifiedRows 1', grid.getModifiedRows())
+    // grid.appendRow(rowData,{at:0});
+    // console.log('getModifiedRows 2', grid.getModifiedRows())
+    // const createdRows = grid.getModifiedRows().createdRows()
+    // console.log('createdRows >> ', createdRows)
+    // grid.on('editingStart', function(ev){
+    //   console.log('Start');
+    // });
+    grid.resetData(gridData);
+    // grid.dataManager.push('DELETE', [rowData])
+
+    const rowData ={
+      id: 549732,
+      name: '삭제',
+      artist: 'Birdy',
+      release: '2016.03.26',
+      type: 'Deluxe',
+      typeCode: '1',
+      genre: 'Pop',
+      genreCode: '1',
+      grade: '2',
+      price: 10000,
+      downloadCount: 1000,
+      listenCount: 5000,
+    }
+
+    // grid.dataManager.push('DELETE', [rowData])
+
+    console.log("grid  >> ", grid);
+    // console.log("grid  >> ", grid.dataManager.getData);
+
+    // console.log("grid getModifiedData  >> ", grid.dataManager.getModifiedData({}));
+    function addRow(){
+      grid.addRowClassName(0, 'removed-row');
+      grid.getRow(0);
+      grid.refreshLayout();
+    }
+    function removeRow2(){
+      const focusedCell = grid.getFocusedCell();
+      grid.addRowClassName(focusedCell.rowKey, 'removed-row');
+
+      const removedRow = grid.store.data.rawData.find(row => row.rowKey === focusedCell.rowKey);
+      console.log('removedRow >> ', removedRow, grid.getData());
+      // grid.removeRowTest(focusedCell.rowKey);  // 필요 시 주석 해제
+      if (removedRow) {
+        grid.dataManager.push('DELETE', [removedRow]);
+      }
+
+      console.log("removeTest >> modifieds ", grid.getModifiedRows());
+    }
+
+
+    function getModify(){
+      console.log("grid dataManager >> ", grid.getModifiedRows());
+    }
+
+    function appendRow(){
+
+      const rowData2 ={
+        id: 549734,
+        name: '삭제 확인',
+        artist: 'Birdy',
+        release: '2016.03.26',
+        type: 'Deluxe',
+        typeCode: '1',
+        genre: 'Pop',
+        genreCode: '1',
+        grade: '2',
+        price: 10000,
+        downloadCount: 1000,
+        listenCount: 5000,
+      }
+      grid.appendRows([rowData2]);
+    }
+    //grid.addRowClassName(2, 'removed-row');
+    grid.getRow(1)._attributes.className.row.push('removed-row');
+    console.log(grid.getRow(1));
+
+
+    function findIndexByRowKey(data, rowKey) {
+
+      console.log("findIndexByRowKey >> ", data, rowKey)
+
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].rowKey === rowKey) {
+          return i;
+        }
+      }
+      return -1; // rowKey를 찾지 못한 경우
+    }
+
+  </script>
+</html>
