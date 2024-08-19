@@ -21,6 +21,9 @@
     </div>
     <div class="code-html contents">
       <div id="grid"></div>
+      <button onclick="remove()">remove</button>
+      <button onclick="remove2()">remove2</button>
+      <button onclick="remove3()">remove3</button>
     </div>
   </body>
   <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
@@ -90,54 +93,51 @@
       }
     }
 
+    const columnsData = [
+      {
+        header: 'Name',
+        name: 'name',
+        editor:'text',
+        width: 400,
+        fixedWidth: true,
+        minWidth: 20
+      }
+    ]
+
+    const transTypeColumn = [
+      {
+        header: '상태',
+        name: 'status',
+        editor:'text',
+      },
+    ]
+    const shouldAddTransTypeColumn = false; // 조건 설정 (true/false 또는 동적으로 조건 설정)
+
+    if (shouldAddTransTypeColumn) {
+      columnsData.push(...transTypeColumn);
+      // 또는 columnsData = columnsData.concat(transTypeColumn);
+    }
     const grid = new tui.Grid({
       el: document.getElementById('grid'),
       data: gridData,
-      rowHeaders: [
-        {
-          type: 'rowNum',
-          renderer: {
-            type: RowNumberRenderer
-          }
-        },
-        {
-          type: 'checkbox',
-          header: `
-          <label for="all-checkbox" class="checkbox">
-            <input type="checkbox" id="all-checkbox" class="hidden-input" name="_checked" />
-            <span class="custom-input"></span>
-          </label>
-        `,
-          renderer: {
-            type: CheckboxRenderer
-          }
-        }
-      ],
-      columns: [
-        {
-          header: 'Name',
-          name: 'name',
-          editor:'text',
-          width: 100,
-          fixedWidth: true,
-          minWidth: 20
-        },
-        {
-          header: 'Type',
-          name: 'type',
-          width: 70
-        },
-        {
-          header: 'Release',
-          name: 'release'
-        },
-        {
-          header: 'Genre',
-          name: 'genre'
-        }
-      ]
+      bodyHeight:100,
+      columns: columnsData
     });
 
+    const columns = [
+      {
+        header: 'Name',
+        name: 'name',
+        editor:'text',
+        width: 400,
+        fixedWidth: true,
+        minWidth: 20
+      },
+      { name: 'score' },
+      { name: 'grade', editor: 'text' },
+    ];
+
+    grid.setColumns(columns);
     grid.on('check', function(ev) {
       console.log('check', ev);
     });
@@ -146,62 +146,57 @@
       console.log('uncheck', ev);
     });
 
-
-    const currentColumns = grid.getColumns();
-    console.log('grid >> ', grid);
-    console.log('getColoumns >> ', currentColumns);
-    const columns = [    {
-      header: 'Artist',
-      name: 'artist',
-      editor:'text',
-      baseWidth: 100
-    }];
-    // currentColumns.unshift(...columns)
-
-    // grid.setColumns(currentColumns);
-
-const nesCol =    {
-      "name": "newCol",
-              "header": "newCol",
-              "editor":'text',
-              "width": 100,
-              "hidden": false,
-              "resizable": false,
-              "align": "left",
-              "fixedWidth": false,
-              "copyOptions": {},
-      "baseWidth": 0,
-              "minWidth": 50,
-              "relationMap": {},
-      "related": false,
-              "sortingType": "asc",
-              "validation": {},
-      "renderer": {},
-      "valign": "middle",
-              "headerAlign": "center",
-              "headerVAlign": "middle",
-              "filter": null,
-              "headerRenderer": null,
-              "disabled": false,
-              "autoResizing": false,
-              "rowSpan": false
+    function remove(){
+      grid.removeRow(grid.getFocusedCell().rowKey)
+      // grid.removeRow(1)
+      console.log('grid.getModifiedRows() >> ', grid.getModifiedRows())
+      console.log('grid.remove viewData() >> ', grid.store.data.viewData )
+      console.log('grid.remove rawData() >> ', grid.store.data.rawData )
+      console.log('>>>>>>> ' )
+      grid.refreshLayout()
     }
+    function remove2() {
+      const focusedCell = grid.getFocusedCell();
+      grid.addRowClassName(focusedCell.rowKey, 'removed-row');
 
+      // rowKey를 사용하여 특정 행을 찾음
+      const removedRow = grid.store.data.rawData.find(row => row.rowKey === focusedCell.rowKey);
 
+      console.log('removedRow >> ', removedRow, grid.getData());
 
-    // console.log ('store baseWidth 1 >> ', grid.store.column.allColumnMap['name'].baseWidth)
-    // grid.store.column.allColumnMap['name'].baseWidth= 300
-    grid.store.column.allColumnMap['newCol'] = nesCol;
-    // grid.store.column.allColumns.push(grid.store.column.allColumnMap['nesCol'])
-    grid.store.column.allColumns.push(nesCol)
+      // grid.removeRowTest(focusedCell.rowKey);  // 필요 시 주석 해제
 
-    console.log ('store column 1 >> ', grid.store.column)
-    console.log ('store nesCol 2 >> ', grid.store.column.allColumnMap['genre'])
-    console.log ('store newCol 2 >> ', grid.store.column.allColumnMap['newCol'])
+      if (removedRow) {
+        grid.dataManager.push('DELETE', [removedRow]);
+      }
 
-    // console.log('getColoumns 2>> ', grid.getColumns());
-    // console.log ('store column 1>> ', grid.store.column)
-
-    // console.log ('store column 2>> ', grid.store.column)
+      console.log("removeTest >> modifieds ", grid.getModifiedRows());
+    }
+    function remove3(){
+      const nesCol =     {
+                id: 549731,
+                name: 'Beautiful Lies',
+                artist: 'Birdy',
+                release: '2016.03.26',
+                type: 'Deluxe',
+                typeCode: '1',
+                genre: 'Pop',
+                genreCode: '1',
+                grade: '2',
+                price: 10000,
+                downloadCount: 1000,
+                listenCount: 5000,
+              }
+      grid.dataManager.push('DELETE', [nesCol])
+      console.log('grid.remove3 viewData() >> ', grid.store.data.viewData )
+      console.log('grid.remove3 rawData() >> ', grid.store.data.rawData )
+      grid.store.data.viewData .splice(0, 1);
+      grid.store.data.rawData .splice(0, 1);
+      console.log('grid.remove3 after slice viewData() >> ', grid.store.data.viewData )
+      console.log('grid.remove3 after slice rawData() >> ', grid.store.data.rawData )
+      console.log('grid.getModifiedRows() >> ', grid.getModifiedRows())
+      console.log('>>>>>>> ' )
+      grid.refreshLayout()
+    }
   </script>
 </html>

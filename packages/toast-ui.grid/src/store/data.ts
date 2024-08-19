@@ -109,32 +109,25 @@ function getRowHeaderValue(row: Row, columnName: string) {
 }
 
 export function createRowSpan(
-    mainRow: boolean,
-    rowKey: RowKey,
-    count: number,
-    spanCount: number
+  mainRow: boolean,
+  rowKey: RowKey,
+  count: number,
+  spanCount: number
 ): RowSpan {
   return { mainRow, mainRowKey: rowKey, count, spanCount };
 }
-let createViewCellCallCount = 0;
+
 function createViewCell(
-    type: string,
-    id: number,
-    row: Row,
-    column: ColumnInfo,
-    { isDataModified = false, prevInvalidStates, relationInfo = {} }: ViewCellCreationOpt
+  id: number,
+  row: Row,
+  column: ColumnInfo,
+  { isDataModified = false, prevInvalidStates, relationInfo = {} }: ViewCellCreationOpt
 ): CellRenderData {
-  createViewCellCallCount++;
   const { relationMatched = true, relationListItems } = relationInfo;
   const { name, formatter, editor, validation, defaultValue } = column;
   let value = isRowHeader(name) ? getRowHeaderValue(row, name) : row[name];
 
-  console.log("type >> createViewCellCallCount >>  ", createViewCellCallCount,  type, name, formatter, defaultValue, value);
-
-
-//console.log("createViewCell row >> ", row)
   if (isNil(value) && !isNil(defaultValue)) {
-
     value = defaultValue;
   }
 
@@ -163,10 +156,9 @@ function createViewCell(
 
   const usePrevInvalidStates = !isDataModified && !isNil(prevInvalidStates);
   const invalidStates = usePrevInvalidStates
-      ? (prevInvalidStates as ErrorInfo[])
-      : getValidationCode({ id, value: row[name], row, validation, columnName: name });
-  console.log("  ")
-  console.log("type 2 >> ", getFormattedValue(formatterProps, formatter, value, relationListItems))
+    ? (prevInvalidStates as ErrorInfo[])
+    : getValidationCode({ id, value: row[name], row, validation, columnName: name });
+
   return {
     editable: !!editor,
     className,
@@ -178,12 +170,11 @@ function createViewCell(
 }
 
 function createRelationViewCell(
-    id: number,
-    name: string,
-    row: Row,
-    { columnMap, valueMap }: ViewCellInfo
+  id: number,
+  name: string,
+  row: Row,
+  { columnMap, valueMap }: ViewCellInfo
 ) {
-
   const { editable, disabled, value } = valueMap[name];
   const { relationMap = {} } = columnMap[name];
 
@@ -202,16 +193,16 @@ function createRelationViewCell(
     const targetEditorOptions = targetEditor?.options;
 
     const relationMatched = isFunction(listItemsCallback)
-        ? someProp('value', targetValue, targetListItems)
-        : true;
+      ? someProp('value', targetValue, targetListItems)
+      : true;
 
-    const cellData = createViewCell('cellData',id, row, columnMap[targetName], {
+    const cellData = createViewCell(id, row, columnMap[targetName], {
       relationInfo: {
         relationMatched,
         relationListItems: targetListItems,
       },
     });
-    console.log("cellData >> ", cellData)
+
     if (!targetEditable) {
       cellData.editable = false;
     }
@@ -234,11 +225,10 @@ export function createViewRow(id: number, row: Row, rawData: Row[], column: Colu
   const { treeColumnName, treeIcon = true, treeIndentWidth } = column;
   const initValueMap: Dictionary<CellRenderData | null> = {};
 
-
   Object.keys(columnMap).forEach((name) => {
     initValueMap[name] = null;
   });
-  console.log("createViewRow >> ", initValueMap[name] )
+
   const cachedValueMap: Dictionary<CellRenderData> = {};
 
   const valueMap = observable(initValueMap) as Dictionary<CellRenderData>;
@@ -253,50 +243,24 @@ export function createViewRow(id: number, row: Row, rawData: Row[], column: Colu
     // add condition expression to prevent to call watch function recursively
     if (!related) {
       __unobserveFns__.push(
-          observe((calledBy: string) => {
-            const isDataModified = calledBy !== 'className';
-            // console.log("observe calledBy >> ", calledBy);
-            // console.log("observe isDataModified >> ", isDataModified);
-            // console.log("observe name >> ", name);
-            // console.log("observe id >> ", id);
-            console.log("   ");
-            console.log(" ====  ");
-            console.log("observe row >> ", row.name );
-            console.log(" ====  ");
-            console.log("   ");
-            row.name = 'test'
-            // console.log("observe  columnMap[name] >> ", columnMap[name]);
-            // console.log("observe prevInvalidStates >> ", cachedValueMap[name]?.invalidStates);
+        observe((calledBy: string) => {
+          const isDataModified = calledBy !== 'className';
 
-            // Call createViewCell and log the result
-            const newCell = createViewCell(name, id, row, columnMap[name], {
-              isDataModified,
-              prevInvalidStates: cachedValueMap[name]?.invalidStates,
-            });
+          cachedValueMap[name] = createViewCell(id, row, columnMap[name], {
+            isDataModified,
+            prevInvalidStates: cachedValueMap[name]?.invalidStates,
+          });
 
-            cachedValueMap[name] =
-                createViewCell(name,id, row, columnMap[name], {
-                  isDataModified,
-                  prevInvalidStates: cachedValueMap[name]?.invalidStates,
-                });
-            console.log("observe newCell >> ", newCell);
-
-            if (newCell && cachedValueMap[name] !== newCell) {
-              console.log("observe Updating cachedValueMap and valueMap for ", name);
-              cachedValueMap[name] = newCell;
-              valueMap[name] = cachedValueMap[name];
-            } else {
-              console.log("observe No update needed for ", name);
-            }
-          })
+          valueMap[name] = cachedValueMap[name];
+        })
       );
     }
 
     if (relationMap && Object.keys(relationMap).length) {
       __unobserveFns__.push(
-          observe(() => {
-            createRelationViewCell(id, name, row, { columnMap, valueMap });
-          })
+        observe(() => {
+          createRelationViewCell(id, name, row, { columnMap, valueMap });
+        })
       );
     }
   });
@@ -355,8 +319,8 @@ function createRelationListItems(name: string, row: Row, columnMap: Dictionary<C
 
   Object.keys(relationMap).forEach((targetName) => {
     relationListItemMap[targetName] = getListItems(
-        relationMap[targetName].listItems,
-        relationCbParams
+      relationMap[targetName].listItems,
+      relationCbParams
     );
   });
   return relationListItemMap;
@@ -418,11 +382,11 @@ function createRowSpanMap(row: OptRow, rowSpan: RowSpanAttributeValue, prevRow?:
 }
 
 export function createRawRow(
-    id: number,
-    row: OptRow,
-    index: number,
-    column: Column,
-    options: RawRowOptions = {}
+  id: number,
+  row: OptRow,
+  index: number,
+  column: Column,
+  options: RawRowOptions = {}
 ) {
   // this rowSpan variable is attribute option before creating rowSpanDataMap
   const rowSpan = row._attributes?.rowSpan as RowSpanAttributeValue;
@@ -456,10 +420,10 @@ export function createRawRow(
 }
 
 export function createData(
-    id: number,
-    data: OptRow[],
-    column: Column,
-    { lazyObservable = false, prevRows, disabled = false }: DataCreationOption
+  id: number,
+  data: OptRow[],
+  column: Column,
+  { lazyObservable = false, prevRows, disabled = false }: DataCreationOption
 ) {
   generateDataCreationKey();
   const { keyColumnName, treeColumnName = '' } = column;
@@ -470,7 +434,7 @@ export function createData(
   if (isUseRowSpanOption) {
     // eslint-disable-next-line no-console
     console.warn(
-        'The option "_attribute.rowSpan" is deprecated. Please use rowSpan option of column.\nFollow example: http://nhn.github.io/tui.grid/latest/tutorial-example29-dynamic-row-span'
+      'The option "_attribute.rowSpan" is deprecated. Please use rowSpan option of column.\nFollow example: http://nhn.github.io/tui.grid/latest/tutorial-example29-dynamic-row-span'
     );
   }
 
@@ -485,30 +449,30 @@ export function createData(
     });
   } else {
     rawData = data.map((row, index, rows) =>
-        createRawRow(id, row, index, column, {
-          keyColumnName,
-          prevRow: prevRows ? prevRows[index] : (rows[index - 1] as Row),
-          lazyObservable,
-          disabled,
-        })
+      createRawRow(id, row, index, column, {
+        keyColumnName,
+        prevRow: prevRows ? prevRows[index] : (rows[index - 1] as Row),
+        lazyObservable,
+        disabled,
+      })
     );
   }
 
   const viewData = rawData.map((row: Row) =>
-      lazyObservable
-          ? ({ rowKey: row.rowKey, sortKey: row.sortKey, uniqueKey: row.uniqueKey } as ViewRow)
-          : createViewRow(id, row, rawData, column)
+    lazyObservable
+      ? ({ rowKey: row.rowKey, sortKey: row.sortKey, uniqueKey: row.uniqueKey } as ViewRow)
+      : createViewRow(id, row, rawData, column)
   );
-  console.log("createData >> ", rawData, viewData)
+
   return { rawData, viewData };
 }
 
 let cachedFilteredIndex: Record<RowKey, number | null> = {};
 
 function applyFilterToRawData(
-    rawData: Row[],
-    filters: Filter[] | null,
-    columnMap: Dictionary<ColumnInfo>
+  rawData: Row[],
+  filters: Filter[] | null,
+  columnMap: Dictionary<ColumnInfo>
 ) {
   let data = rawData;
   cachedFilteredIndex = {};
@@ -523,7 +487,7 @@ function applyFilterToRawData(
         const relationListItems = row._relationListItemMap[columnName];
         const formatterProps = { row, column: columnMap[columnName], value };
         const filtered = conditionFn!(
-            getFormattedValue(formatterProps, formatter, value, relationListItems)
+          getFormattedValue(formatterProps, formatter, value, relationListItems)
         );
 
         // cache the filtered index for performance
@@ -542,8 +506,8 @@ function applyFilterToRawData(
 
 function createPageOptions(userPageOptions: PageOptions, rawData: Row[]) {
   const pageOptions = (isEmpty(userPageOptions)
-      ? {}
-      : {
+    ? {}
+    : {
         useClient: false,
         page: 1,
         perPage: DEFAULT_PER_PAGE,
@@ -561,13 +525,13 @@ function createPageOptions(userPageOptions: PageOptions, rawData: Row[]) {
 }
 
 export function create({
-                         data,
-                         column,
-                         pageOptions: userPageOptions,
-                         useClientSort,
-                         disabled,
-                         id,
-                       }: DataOption) {
+  data,
+  column,
+  pageOptions: userPageOptions,
+  useClientSort,
+  disabled,
+  id,
+}: DataOption) {
   const { rawData, viewData } = createData(id, data, column, { lazyObservable: true, disabled });
 
   const sortState: SortState = {
@@ -596,8 +560,8 @@ export function create({
       if (this.filters) {
         // should filter the sliced data which is displayed in viewport in case of client infinite scrolling
         const targetData = isScrollPagination(this, true)
-            ? this.rawData.slice(...this.pageRowRange)
-            : this.rawData;
+          ? this.rawData.slice(...this.pageRowRange)
+          : this.rawData;
         return applyFilterToRawData(targetData, this.filters, column.allColumnMap);
       }
 
@@ -607,16 +571,16 @@ export function create({
     get filteredIndex() {
       const { filteredRawData, filters } = this;
       return filters
-          ? filteredRawData
-              .filter((row) => !isNull(cachedFilteredIndex[row.rowKey]))
-              .map((row) => cachedFilteredIndex[row.rowKey]!)
-          : null;
+        ? filteredRawData
+            .filter((row) => !isNull(cachedFilteredIndex[row.rowKey]))
+            .map((row) => cachedFilteredIndex[row.rowKey]!)
+        : null;
     },
 
     get filteredViewData() {
       return this.filters
-          ? this.filteredIndex!.map((index) => this.viewData[index])
-          : this.viewData;
+        ? this.filteredIndex!.map((index) => this.viewData[index])
+        : this.viewData;
     },
 
     get pageRowRange() {
