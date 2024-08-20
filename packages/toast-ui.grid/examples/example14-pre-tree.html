@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>14. Tree</title>
+    <link rel="stylesheet" type="text/css" href="./css/tui-example-style.css" />
+    <link rel="stylesheet" type="text/css" href="../dist/tui-grid.css" />
+  </head>
+
+  <body>
+    <div class="description">
+      You can check for custom events in the console.<br />
+      You can see the tutorial
+      <a
+        href="https://github.com/nhn/tui.grid/blob/master/packages/toast-ui.grid/docs/en/tree.md"
+        target="_blank"
+        >here</a
+      >.
+      <br/>
+      <strong>The example code can be slower than your environment because the code is transpiled by babel-standalone in runtime.</strong>
+    </div>
+    <div class="contents">
+      <div class="code-html">
+        <div id="grid"></div>
+        <button type="button" onclick="filter()">appendRow
+        </button>
+      </div>
+    </div>
+  </body>
+  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  <script type="text/javascript" src="../dist/tui-grid.js"></script>
+<!--  <script type="text/javascript" src="./data/tree-dummy.js"></script>-->
+  <script type="text/javascript" src="./data/tree-pre_4.js"></script>
+<!--  <script type="text/javascript" src="./data/premiumConstant.js"></script>-->
+  <script type="text/babel" class="code-js">
+
+    const LOCAL_CONSTANT = {
+      LOCAL_VARIABLE_TYPE: 'functionScopeVariableType',
+      LOCAL_VARIABLE_NAME: 'name',
+      IS_LIST: 'isList',
+      VARIABLE_DATA_TYPE: {
+        MODEL: 'MODEL'
+      }
+    };
+
+    const TRUE_FALSE = [
+      { key: true, text: 'true', value: 'true' },
+      { key: false, text: 'false', value: 'false' }
+    ];
+
+    const VARIABLE_TYPE = [
+      { key: 'STRING', value: 'STRING', text: 'STRING' },
+      { key: 'INTEGRAL', value: 'INTEGRAL', text: 'INTEGRAL' },
+      { key: 'REALNUM', value: 'REALNUM', text: 'REALNUM' },
+      { key: 'BOOLEAN', value: 'BOOLEAN', text: 'BOOLEAN' },
+      { key: 'DATE', value: 'DATE', text: 'DATE' },
+      { key: 'MODEL', value: 'MODEL', text: 'MODEL' }
+    ];
+
+    const treeColumnOptions = {
+      name: LOCAL_CONSTANT.LOCAL_VARIABLE_NAME,
+      useCascadingCheckbox: true
+      // resizable: true,
+      // indentWidth: 10,
+    };
+
+    const grid = new tui.Grid({
+      el: document.getElementById('grid'),
+      data: treeData,
+      rowHeaders: ['checkbox'],
+      bodyHeight: 500,
+      treeColumnOptions: treeColumnOptions,
+      columns: [
+        {
+          header: '이름',
+          name: LOCAL_CONSTANT.LOCAL_VARIABLE_NAME,
+          // width: 350,
+          align: 'left',
+          filter: {
+             type: 'text', showApplyBtn: true, showClearBtn: true
+          }
+        },
+        {
+          header: '데이터유형4',
+          name: LOCAL_CONSTANT.LOCAL_VARIABLE_TYPE,
+          align: 'center',
+          // width: 150,
+          editor: {
+            type: 'select',
+            options: {
+              listItems: VARIABLE_TYPE
+            }
+          },
+          filter: {
+            type: 'text' // type: "text"
+          }
+        },
+        {
+          header: '리스트여부',
+          name: LOCAL_CONSTANT.IS_LIST,
+          align: 'center',
+          // width: 150,
+          editor: {
+            type: 'select',
+            options: {
+              listItems: TRUE_FALSE
+            }
+          },
+          filter: {
+            type: 'text' // type: "text"
+          }
+        }
+      ]
+    });
+
+    grid.on('expand', ev => {
+      const { rowKey } = ev;
+      const descendantRows = grid.getDescendantRows(rowKey);
+
+      console.log('rowKey: ' + rowKey);
+      console.log('descendantRows: ' + descendantRows);
+
+      if (!descendantRows.length) {
+        grid.appendRow(
+          {
+            name: 'dynamic loading data',
+            _children: [
+              {
+                name: 'leaf row'
+              },
+              {
+                name: 'internal row',
+                _children: []
+              }
+            ]
+          },
+          { parentRowKey: rowKey }
+        );
+      }
+    });
+
+    grid.on('collapse', ev => {
+      const { rowKey } = ev;
+      const descendantRows = grid.getDescendantRows(rowKey);
+
+      console.log('rowKey: ' + rowKey);
+      // console.log('descendantRows: ' + descendantRows);
+    });
+
+// grid.expandAll();
+console.log("gird >", grid)
+
+    const state = {
+      code: 'contain',
+      value: 'Blue'
+    };
+function filter(){
+  grid.filter('name', [{code: 'contain', value: 'Blue'}]);
+}
+
+  </script>
+</html>

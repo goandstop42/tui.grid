@@ -256,6 +256,9 @@
       grid.refreshLayout();
     }
     function removeRow2(){
+
+      console.log("removeTest >> before  getModifiedRows >> ", grid.getModifiedRows());
+
       const focusedCell = grid.getFocusedCell();
       grid.addRowClassName(focusedCell.rowKey, 'removed-row');
 
@@ -266,7 +269,9 @@
         grid.dataManager.push('DELETE', [removedRow]);
       }
 
-      console.log("removeTest >> modifieds ", grid.getModifiedRows());
+      console.log("removeTest >> grid.dataManager ", grid.dataManager);
+      console.log("removeTest >> grid.dataManager ",  grid.dataManager.splice("UPDATE", [removedRow.rowKey]));
+      console.log("removeTest >>  getModifiedRows >> ", grid.getModifiedRows());
     }
 
 
