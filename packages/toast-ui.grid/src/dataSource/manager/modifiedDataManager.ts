@@ -154,9 +154,14 @@ export function createManager(): ModifiedDataManager {
       return !!dataMap[type].length;
     },
 
+    splice(type: ModificationTypeCode, rowKeys: RowKey[]) {
+      return splice(type, rowKeys);
+    },
+
     push(type: ModificationTypeCode, rows: Row[], mixed = false) {
       const rowKeys = rows.map((row) => row.rowKey);
       mixedOrder = mixedOrder || mixed;
+
       if (type === 'UPDATE' || type === 'DELETE') {
         splice('UPDATE', rowKeys);
 

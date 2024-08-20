@@ -108,6 +108,7 @@ export interface ModifiedDataManager {
   getAllModifiedData: (options: ModifiedRowsOptions) => ModifiedRows;
   isModified: () => boolean;
   isModifiedByType: (type: ModificationTypeCode) => boolean;
+  splice: (type: ModificationTypeCode, rowKeys: RowKey[]) => void;
   push: (type: ModificationTypeCode, row: Row[], mixed?: boolean) => void;
   clearSpecificRows: (rowMap: MutationParams) => void;
   clear: (type: RequestTypeCode) => void;
