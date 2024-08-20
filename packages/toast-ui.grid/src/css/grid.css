@@ -1076,3 +1076,14 @@
 .tui-grid-context-menu span {
   display: inline-block;
 }
+.tui-grid-cell.added-row {
+  background-color: #bbcff9;
+}
+
+.tui-grid-cell.removed-row {
+  background-color: #f4bcbc;
+}
+
+.tui-grid-cell.modified-row {
+  background-color: #b7e2c7;
+}
