@@ -39,14 +39,13 @@
 
     const grid = new tui.Grid({
       el: document.getElementById('grid'),
-      bodyHeight: 500,
       data: createRows(),
       columns,
       rowHeaders: ['rowNum']
     });
 
-    grid.on('scrollEnd', () => {
-      grid.appendRows(createRows());
-    })
+    // grid.on('scrollEnd', () => {
+    //   grid.appendRows(createRows());
+    // })
   </script>
 </html>

@@ -43,6 +43,7 @@
     "filePath": "examples",
     "titles": {
       "example01-basic": "1. Basic",
+      "example01-fixedHeader": "1. fixedHeader",
       "example02-complex-columns": "2. Complex columns",
       "example03-custom-editor": "3. Custom Editor",
       "example03-CRUD.html": "3. CRUD.html",
