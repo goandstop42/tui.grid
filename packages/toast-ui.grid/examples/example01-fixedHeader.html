@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>1. Basic</title>
+    <link rel="stylesheet" type="text/css" href="./css/tui-example-style.css" />
+    <link rel="stylesheet" type="text/css" href="../dist/tui-grid.css" />
+    <style>
+      .scrollable-container {
+        height: 200px;
+        overflow: auto; /* Hide the default scroll bars */
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="description">
+      You can see the tutorial
+      <a
+        href="https://github.com/nhn/tui.grid/blob/master/packages/toast-ui.grid/docs/en/getting-started.md"
+        target="_blank"
+        >here</a
+      >
+      <br>
+      <strong>The example code can be slower than your environment because the code is transpiled by babel-standalone in runtime.</strong>
+    </div>
+    
+    <div class="code-html contents">
+<!--      <div id="scrollableContainer" class= "scrollable-container" style="height: 200px">-->
+        <div id="grid"></div>
+<!--      </div>-->
+    </div>
+    <button type="button" onclick="addRow()">add</button>
+    <button type="button" onclick="modifiedData()">modifiedData</button>
+      </div>
+    </div>
+<!--     <div class="code-html contents">-->
+<!--      <div  class= "scrollable-container" style="height: 200px">-->
+<!--        <div id="gridCopy"></div>-->
+<!--      </div>-->
+<!--    </div>-->
+  </body>
+  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  <script type="text/javascript" src="../dist/tui-grid.js"></script>
+  <script type="text/javascript" src="./data/basic-dummy.js"></script>
+  <script type="text/babel" class="code-js">
+    const grid = new tui.Grid({
+      el: document.getElementById('grid'),
+      data: gridData,
+      bodyHeight:200,
+      scrollX: false,
+      scrollY: false,
+      copyOptions: {
+        useFormattedValue: true,
+        useListItemText: false,
+      },
+      columns: [
+        {
+          header: 'Name',
+          name: 'name',
+          editor:'text'
+        },
+        {
+          header: 'Artist',
+          name: 'artist',
+          editor:'text'
+        },
+        {
+          header: 'Type',
+          name: 'type',
+          editor: {
+            type: 'select',
+            options: {
+              listItems: [
+                {text: 'STRING', value: 'STRING'},
+                {text: 'NUMBER', value: 'NUMBER'}
+              ]
+            }
+          },
+          copyOptions: {
+            useFormattedValue: true,
+            useListItemText: false,
+          }
+        }
+      ]
+    });
+
+    console.log("grid.getRow(1) >> ", grid.getRow(1))
+
+    function addRow(){
+      grid.getRow(0);
+      // grid.appendRow({
+      //   "name": "A Head Full Of Dreams",
+      //   "artist": "Coldplay",
+      // }, {at:6})
+      const data = [
+        { name: 'Han', artist: 1 },
+        { name: 'Kim', artist: 2 },
+        { name: 'Ryu', artist: 3 },
+        { name: 'Lee', artist: 4 },
+      ];
+      grid.appendRows(data);
+      grid.refreshLayout();
+    }
+
+    function modifiedData(){
+      console.log("modified >> ", grid.getModifiedRows());
+    }
+
+
+  </script>
+</html>

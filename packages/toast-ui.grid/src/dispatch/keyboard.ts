@@ -6,7 +6,7 @@ import { changeFocus, saveAndFinishEditing, startEditing } from './focus';
 import { changeSelectionRange } from './selection';
 import { isRowHeader } from '../helper/column';
 import { getRowRangeWithRowSpan, isRowSpanEnabled } from '../query/rowSpan';
-import { getDataManager } from '../instance';
+import { getDataManager, getInstance } from '../instance';
 import { getEventBus } from '../event/eventBus';
 import GridEvent from '../event/gridEvent';
 import { createChangeInfo, isEditableCell, getRowKeyByIndexWithPageRange } from '../query/data';
@@ -223,6 +223,8 @@ function applyCopiedData(store: Store, copiedData: string[][], range: SelectionR
       const name = columnNames[columnIndex + startColumnIndex];
       if (filteredViewData.length && isEditableCell(store, rawRowIndex, name)) {
         const targetRow = filteredRawData[rawRowIndex];
+        // console.log('filteredRawData[rawRowIndex] >> ', filteredRawData[rawRowIndex], rawRowIndex);
+        // console.log('targetRow[rawRowIndex] >> ', targetRow);
         const { prevChange, nextChange, changeValue } = createChangeInfo(
           store,
           targetRow,
@@ -244,6 +246,7 @@ export function paste(store: Store, copiedData: string[][]) {
     selection,
     id,
     data: { viewData },
+    column: { visibleColumnsWithRowHeader },
   } = store;
   const { originalRange } = selection;
 
@@ -253,16 +256,70 @@ export function paste(store: Store, copiedData: string[][]) {
 
   const rangeToPaste = getRangeToPaste(store, copiedData);
   const endRowIndex = rangeToPaste.row[1];
+  const result = [];
+
+  const {
+    row: [startRowIndex],
+    column: [startColumnIndex, endColumnIndex],
+  } = rangeToPaste;
+
+  const columnNames = mapProp('name', visibleColumnsWithRowHeader);
+
+  for (let rowIndex = 0; rowIndex + startRowIndex <= endRowIndex; rowIndex += 1) {
+    const rowObject = {};
+    for (let columnIndex = 0; columnIndex + startColumnIndex <= endColumnIndex; columnIndex += 1) {
+      const name = columnNames[columnIndex + startColumnIndex];
+      (rowObject as any)[name] = copiedData[rowIndex][columnIndex];
+    }
+    result.push(rowObject);
+  }
+  // console.log('result >> ', result, endRowIndex - viewData.length + 1);
+  // console.log('result >> viewData ', viewData);
+  // console.log('result >> viewData.length ', viewData.length);
+  // console.log('result >> endRowIndex ', endRowIndex, endRowIndex > viewData.length - 1);
+
+  // console.log('visibleColumnsWithRowHeader >> ', visibleColumnsWithRowHeader, copiedData);
 
   if (endRowIndex > viewData.length - 1) {
+    const modifiedResult = result.slice(-(endRowIndex - viewData.length + 1));
+    // console.log('result modifiedResult >> ', modifiedResult);
     appendRows(
       store,
-      [...Array(endRowIndex - viewData.length + 1)].map(() => ({}))
+      // [...Array(endRowIndex - viewData.length + 1)].map(() => ({}))
+      // result
+      modifiedResult
     );
-  }
+  } else {
+    const currentInstance = getInstance(id);
+    let resultIndex = 0;
+    for (let i = startRowIndex; i <= endRowIndex; i += 1) {
+      const currentRow = currentInstance.getRow(i)!;
+      const modifiedCopiedData = result[resultIndex] as { [key: string]: any };
 
+      updateRow(currentRow, modifiedCopiedData, columnNames);
+
+      resultIndex += 1;
+      currentInstance.setRow(currentRow.rowKey, currentRow);
+    }
+  }
   applyCopiedData(store, copiedData, rangeToPaste);
   changeSelectionRange(selection, rangeToPaste, id);
+}
+
+function updateRow(
+  currentRow: { [key: string]: any },
+  modifiedData: { [key: string]: any },
+  columnNames: string[]
+) {
+  for (const key in modifiedData) {
+    if (modifiedData.hasOwnProperty(key)) {
+      if (columnNames.includes(key)) {
+        currentRow[key] = modifiedData[key];
+      }
+    } else {
+      console.warn(`Skipped inherited property '${key}' from modifiedData object.`);
+    }
+  }
 }
 
 export function updateDataByKeyMap(store: Store, origin: Origin, changeInfo: ChangeInfo) {
