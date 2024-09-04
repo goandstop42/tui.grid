@@ -1,5 +1,5 @@
 {
-  "name": "tui-grid",
+  "name": "@wne/tui-grid",
   "version": "4.21.22",
   "description": "TOAST UI Grid : Powerful data grid control supported by TOAST UI",
   "main": "dist/tui-grid.js",
@@ -24,7 +24,8 @@
     "doc:dev": "npm run ts2js && tuidoc --serv",
     "doc": "npm run ts2js && tuidoc",
     "publish:cdn": "node scripts/publishToCDN.js",
-    "update:wrapper": "node scripts/wrapperUpdate.js"
+    "update:wrapper": "node scripts/wrapperUpdate.js",
+    "install-publish": "npm publish --git-checks=false --registry http://211.197.235.102/nexus/repository/wne-npm-registry"
   },
   "repository": {
     "type": "git",
@@ -68,6 +69,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.12.4",
     "html-webpack-plugin": "^3.2.0",
+    "loadash": "^1.0.0",
     "mini-css-extract-plugin": "^0.7.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "preact": "^8.4.2",
@@ -83,7 +85,9 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
+    "@types/lodash": "^4.17.7",
     "dompurify": "^2.3.9",
+    "loadash": "^1.0.0",
     "tui-date-picker": "^4.1.0",
     "tui-pagination": "^3.4.0",
     "xlsx": "^0.17.1"

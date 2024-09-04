@@ -37,7 +37,7 @@ const commonConfig = {
   output: {
     library: ['tui', 'Grid'],
     libraryTarget: 'umd',
-    filename: `${package.name + (minify ? '.min' : '')}.js`,
+    filename: `tui-grid${minify ? '.min' : ''}.js`,
     publicPath: '/dist',
     path: path.resolve(__dirname, 'dist'),
   },
@@ -56,7 +56,8 @@ module.exports = (env, { mode }) => {
       mode,
       plugins: [
         new MiniCssExtractPlugin({
-          filename: `${package.name + (minify ? '.min' : '')}.css`,
+          // filename: `${package.name + (minify ? '.min' : '')}.css`,
+          filename: `tui-grid${minify ? '.min' : ''}.css`,
         }),
         new webpack.BannerPlugin({ banner, entryOnly: true }),
       ],

@@ -11,6 +11,8 @@
     "lint": "eslint src/**",
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
+    "install-grid": "npm install --save --legacy-peer-deps @wne/tui-grid",
+    "uninstall-grid": "npm uninstall --legacy-peer-deps @wne/tui-grid",
     "serve": "vue serve ./example/App.vue"
   },
   "homepage": "https://github.com/nhn/tui.grid/tree/master/packages/toast-ui.vue-grid",
@@ -23,6 +25,7 @@
     "@babel/preset-env": "^7.1.0",
     "@vue/cli": "^3.2.1",
     "@vue/cli-service-global": "^3.1.2",
+    "@wne/tui-grid": "^4.21.22",
     "babel-eslint": "^9.0.0",
     "babel-loader": "^8.0.4",
     "core-js": "^2.6.9",
@@ -40,8 +43,5 @@
   },
   "peerDependencies": {
     "vue": "^2.5.0"
-  },
-  "dependencies": {
-    "tui-grid": "^4.21.22"
   }
 }
