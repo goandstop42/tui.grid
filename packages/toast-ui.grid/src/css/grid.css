@@ -271,7 +271,8 @@
 .tui-grid-cell-content input[type='password'] {
   width: 100%;
   padding: 6px 7px;
-  border: solid 1px #ddd;
+  /*border: solid 1px red;*/
+  border-width: 0;
 }
 .tui-grid-cell-content label + input {
   margin-left: 10px;
