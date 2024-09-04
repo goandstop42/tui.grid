@@ -414,8 +414,7 @@ class BodyAreaComp extends Component<Props> {
         } else {
           this.props.dispatch('moveRow', rowKey, index);
         }
-        // @ts-ignore
-        targetRowInfo = gridEvent.instance.dataManager.getOriginData()[gridEvent.targetRowKey];
+        targetRowInfo = this.context.store.data.filteredRawData[index];
       }
     }
     this.props.dispatch('removeRowClassName', rowKey, DRAGGING_CLASS);
@@ -427,13 +426,11 @@ class BodyAreaComp extends Component<Props> {
 
     this.props.dispatch('updateRowSpan');
 
-    const customEvent = new CustomEvent('gridDropEvent', {
-      detail: {
-        customData: targetRowInfo,
-      },
+    const gridDropEvent = new GridEvent({
+      rowKey,
+      ...targetRowInfo,
     });
-    const element = document.elementFromPoint(ev.clientX, ev.clientY);
-    element!.dispatchEvent(customEvent);
+    this.props.eventBus.trigger('gridDropEvent', gridDropEvent);
   };
 
   private clearDraggableInfo() {

@@ -83,7 +83,8 @@ export type GridEventName =
   | 'drop'
   | 'keydown'
   | 'beforeExport'
-  | 'afterExport';
+  | 'afterExport'
+  | 'gridDropEvent';
 export type GridEventListener = (gridEvent: TuiGridEvent) => void;
 
 export interface OptGrid {
