@@ -2,7 +2,7 @@
   <div ref="tuiGrid"></div>
 </template>
 <script>
-import Grid from 'tui-grid';
+import Grid from '@wne/tui-grid';
 
 const presetTheme = ['default', 'striped', 'clean'];
 
