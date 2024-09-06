@@ -283,9 +283,16 @@ export function convertTableToData(rows: HTMLCollectionOf<HTMLTableRowElement>) 
 
   fromArray(rows).forEach((tr, rowIndex) => {
     let columnIndex = 0;
-
     fromArray(tr.cells).forEach((td) => {
-      const text = td.textContent || td.innerText;
+      const originalText = td.innerText;
+
+      const processedText = originalText
+        .split('\n')
+        .map((line) => line.replace(/^\s{4}/, '').trimEnd())
+        .join('\n')
+        .trim();
+
+      console.log('Processed text:', processedText);
 
       while (data[rowIndex][columnIndex]) {
         columnIndex += 1;
@@ -294,7 +301,7 @@ export function convertTableToData(rows: HTMLCollectionOf<HTMLTableRowElement>) 
       colspanRange = [columnIndex, columnIndex + (td.colSpan || 1)];
       rowspanRange = [rowIndex, rowIndex + (td.rowSpan || 1)];
 
-      setDataInSpanRange(text, data, colspanRange, rowspanRange);
+      setDataInSpanRange(processedText, data, colspanRange, rowspanRange);
       columnIndex = colspanRange[1];
     });
   });
