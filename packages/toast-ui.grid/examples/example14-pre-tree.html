@@ -30,7 +30,7 @@
   <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
   <script type="text/javascript" src="../dist/tui-grid.js"></script>
 <!--  <script type="text/javascript" src="./data/tree-dummy.js"></script>-->
-  <script type="text/javascript" src="./data/tree-pre_4.js"></script>
+  <script type="text/javascript" src="./data/tree-dummy.js"></script>
 <!--  <script type="text/javascript" src="./data/premiumConstant.js"></script>-->
   <script type="text/babel" class="code-js">
 
@@ -113,12 +113,11 @@
       ]
     });
 
+    // grid.collapseAll();
+
     grid.on('expand', ev => {
       const { rowKey } = ev;
       const descendantRows = grid.getDescendantRows(rowKey);
-
-      console.log('rowKey: ' + rowKey);
-      console.log('descendantRows: ' + descendantRows);
 
       if (!descendantRows.length) {
         grid.appendRow(
