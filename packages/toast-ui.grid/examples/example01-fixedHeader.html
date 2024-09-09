@@ -43,6 +43,11 @@
   <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
   <script type="text/javascript" src="../dist/tui-grid.js"></script>
   <script type="text/javascript" src="./data/basic-dummy.js"></script>
+  <script type="text/javascript" src="./data/basic-dummy.js"></script>
+  <script type="module">
+    import { TextareaHeader } from './css/TextareaHeader.js';
+    window.TextareaHeader = TextareaHeader;
+  </script>
   <script type="text/babel" class="code-js">
     const grid = new tui.Grid({
       el: document.getElementById('grid'),
@@ -58,7 +63,7 @@
         {
           header: 'Name',
           name: 'name',
-          editor:'text'
+          editor: TextareaHeader,
         },
         {
           header: 'Artist',
@@ -84,8 +89,6 @@
         }
       ]
     });
-
-    console.log("grid.getRow(1) >> ", grid.getRow(1))
 
     function addRow(){
       grid.getRow(0);

@@ -55,5 +55,10 @@
       ],
       draggable: true
     });
+
+    grid.on('gridDropEvent', function(ev) {
+      console.log("gridDropEvent >> ", ev)
+    });
+
   </script>
 </html>

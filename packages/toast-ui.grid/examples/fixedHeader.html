@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>1. Basic</title>
+    <link rel="stylesheet" type="text/css" href="./css/tui-example-style.css" />
+    <link rel="stylesheet" type="text/css" href="../dist/tui-grid.css" />
+    <style>
+      .scrollable-container {
+        height: 200px;
+        overflow: auto; /* Hide the default scroll bars */
+      }
+    </style>
+  </head>
+
+  <body>
+  <div class="description">
+    You can see the tutorial
+    <a href="https://github.com/nhn/tui.grid/blob/master/packages/toast-ui.grid/docs/en/getting-started.md" target="_blank">here</a>
+    <br>
+    <strong>The example code can be slower than your environment because the code is transpiled by babel-standalone in runtime.</strong>
+  </div>
+  <div class="code-html contents">
+    <div id="scrollableContainer" class="scrollable-container" style="height: 200px">
+      <div id="grid">
+        <div data-grid-id="1" class="tui-grid-container" style="width: 100%;">
+          <div class="tui-grid-content-area tui-grid-no-scroll-x tui-grid-no-scroll-y">
+            <div class="tui-grid-lside-area" style="width: 0px; display: block;">
+              <div class="tui-grid-header-area" style="height: 40px;">
+                <table class="tui-grid-table">
+                  <colgroup/>
+                  <tbody>
+                  <tr style="height: 40px;"/>
+                  </tbody>
+                </table>
+                <div class="tui-grid-column-resize-container" style="display: block; margin-top: -35px; height: 35px;"/>
+              </div>
+              <div class="tui-grid-body-area" style="height: 240px; overflow-x: hidden;">
+                <div class="tui-grid-body-container" style="height: 241px;">
+                  <div class="tui-grid-table-container" style="width: 0px; top: 0px; left: 0px; overflow: visible;">
+                    <table class="tui-grid-table">
+                      <colgroup/>
+                      <tbody>
+                      <tr class="tui-grid-row-odd" style="height: 40px;"/>
+                      <tr class="tui-grid-row-even" style="height: 40px;"/>
+                      <tr class="tui-grid-row-odd" style="height: 40px;"/>
+                      <tr class="tui-grid-row-even" style="height: 40px;"/>
+                      <tr class="tui-grid-row-odd" style="height: 40px;"/>
+                      <tr class="tui-grid-row-even" style="height: 40px;"/>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div/>
+                </div>
+              </div>
+            </div>
+            <div class="tui-grid-rside-area" style="display: block; margin-left: 0px; width: 1799px;">
+              <div class="tui-grid-header-area" style="height: 40px;">
+                <table class="tui-grid-table">
+                  <colgroup>
+                    <col data-column-name="" style="width: 1799px;"/>
+                  <tbody>
+                  <tr style="height: 40px;">
+                    <th data-column-name="name" class="tui-grid-cell tui-grid-cell-header" style="text-align: center; vertical-align: middle;">Name1</th>
+                  </tr>
+                  </tbody>
+                </table>
+                <div class="tui-grid-column-resize-container" style="display: block; margin-top: -35px; height: 35px;"/>
+              </div>
+              <div class="tui-grid-body-area" style="height: 240px; overflow: hidden;">
+                <div class="tui-grid-body-container" style="width: 1798px; height: 241px;">
+                  <div class="tui-grid-table-container" style="width: 1799px; top: 0px; left: 0px; overflow: visible;">
+                    <table class="tui-grid-table">
+                      <colgroup>
+                        <col data-column-name="" style="width: 1799px;"/>
+                      <tbody>
+                      <tr class="tui-grid-row-odd" style="height: 40px;">
+                        <td data-row-key="0" data-column-name="name" class="tui-grid-cell tui-grid-cell-has-input tui-grid-cell-editable " style="text-align: left; vertical-align: middle;">
+                          <div class="tui-grid-cell-content">Beautiful Lies</div>
+                        </td>
+                      </tr>
+                      <tr class="tui-grid-row-even" style="height: 40px;">
+                        <td data-row-key="1" data-column-name="name" class="tui-grid-cell tui-grid-cell-has-input tui-grid-cell-editable " style="text-align: left; vertical-align: middle;">
+                          <div class="tui-grid-cell-content">X</div>
+                        </td>
+                      </tr>
+                      <tr class="tui-grid-row-odd" style="height: 40px;">
+                        <td data-row-key="2" data-column-name="name" class="tui-grid-cell tui-grid-cell-has-input tui-grid-cell-editable " style="text-align: left; vertical-align: middle;">
+                          <div class="tui-grid-cell-content">Moves Like Jagger</div>
+                        </td>
+                      </tr>
+                      <tr class="tui-grid-row-even" style="height: 40px;">
+                        <td data-row-key="3" data-column-name="name" class="tui-grid-cell tui-grid-cell-has-input tui-grid-cell-editable " style="text-align: left; vertical-align: middle;">
+                          <div class="tui-grid-cell-content">A Head Full Of Dreams</div>
+                        </td>
+                      </tr>
+                      <tr class="tui-grid-row-odd" style="height: 40px;">
+                        <td data-row-key="4" data-column-name="name" class="tui-grid-cell tui-grid-cell-has-input tui-grid-cell-editable " style="text-align: left; vertical-align: middle;">
+                          <div class="tui-grid-cell-content">21</div>
+                        </td>
+                      </tr>
+                      <tr class="tui-grid-row-even" style="height: 40px;">
+                        <td data-row-key="5" data-column-name="name" class="tui-grid-cell tui-grid-cell-has-input tui-grid-cell-editable " style="text-align: left; vertical-align: middle;">
+                          <div class="tui-grid-cell-content">Warm On A Cold Night</div>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div/>
+                </div>
+              </div>
+            </div>
+            <div class="tui-grid-border-line tui-grid-border-line-top"/>
+            <div class="tui-grid-border-line tui-grid-border-line-left"/>
+            <div class="tui-grid-border-line tui-grid-border-line-right"/>
+            <div class="tui-grid-border-line tui-grid-border-line-bottom" style="bottom: 0px;"/>
+          </div>
+          <div class="tui-grid-layer-state" style="display: none; top: 41px; height: 239px; left: 0px; right: 1px;">
+            <div class="tui-grid-layer-state-content">
+              <p/>
+            </div>
+          </div>
+          <div class="tui-grid-clipboard" contenteditable="true" spellcheck="false" data-ms-editor="true"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  </body>
+  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  <script type="text/javascript" src="../dist/tui-grid.js"></script>
+  <script type="text/javascript" src="./data/basic-dummy.js"></script>
+  <script type="text/babel" class="code-js">
+    const grid = new tui.Grid({
+      el: document.getElementById('grid'),
+      data: gridData,
+      scrollX: false,
+      scrollY: false,
+      copyOptions: {
+        useFormattedValue: true,
+        useListItemText: false,
+      },
+      columns: [
+        {
+          header: 'Name',
+          name: 'name',
+          editor:'text'
+        },
+      ]
+    });
+  </script>
+
+</html>
