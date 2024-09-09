@@ -22,6 +22,7 @@ import { updateAllSummaryValues } from './summary';
 import { createFilterEvent, EventType, EventParams } from '../query/filter';
 import { updatePageOptions } from './pagination';
 import { updateRowSpan } from './rowSpan';
+import {getInstance} from "../instance";
 
 function initLayerAndScrollAfterFiltering(store: Store) {
   const { data } = store;
@@ -218,7 +219,7 @@ export function updateFilters({ data }: Store, columnName: string, nextColumnFil
   }
 }
 
-export function clearFilter({ data }: Store, columnName: string) {
+export function clearFilter({ data, id }: Store, columnName: string) {
   const filters = data.filters || [];
   const filterIndex = findPropIndex('columnName', columnName, filters);
 
@@ -229,6 +230,8 @@ export function clearFilter({ data }: Store, columnName: string) {
       filters.splice(filterIndex, 1);
     }
   }
+  const instance = getInstance(id)
+  instance.restore();
 }
 
 function clearAll(store: Store) {

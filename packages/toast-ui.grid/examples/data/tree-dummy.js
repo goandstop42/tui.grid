@@ -1,5 +1,4 @@
-/* eslint-disable */
-var treeData = [
+const treeData = [
   {
     id: 549731,
     name: 'Beautiful Lies',
@@ -14,7 +13,7 @@ var treeData = [
     downloadCount: 1000,
     listenCount: 5000,
     _attributes: {
-      expanded: true,
+      expanded: true
     },
     _children: [
       {
@@ -30,7 +29,7 @@ var treeData = [
         price: 12000,
         downloadCount: 1000,
         listenCount: 5000,
-        _children: [],
+        _children: []
       },
       {
         id: 498896,
@@ -46,8 +45,8 @@ var treeData = [
         downloadCount: 1000,
         listenCount: 5000,
         _attributes: {
-          expanded: false,
-        },
+          expanded: false
+        }
       },
       {
         id: 450720,
@@ -63,7 +62,7 @@ var treeData = [
         downloadCount: 1000,
         listenCount: 5000,
         _attributes: {
-          expanded: true,
+          expanded: true
         },
         _children: [
           {
@@ -80,7 +79,7 @@ var treeData = [
             downloadCount: 1000,
             listenCount: 5000,
             _attributes: {
-              expanded: true,
+              expanded: true
             },
             _children: [
               {
@@ -95,7 +94,7 @@ var treeData = [
                 grade: '5',
                 price: 6000,
                 downloadCount: 1000,
-                listenCount: 5000,
+                listenCount: 5000
               },
               {
                 id: 317659,
@@ -109,7 +108,7 @@ var treeData = [
                 grade: '2',
                 price: 7000,
                 downloadCount: 1000,
-                listenCount: 5000,
+                listenCount: 5000
               },
               {
                 id: 583551,
@@ -123,13 +122,13 @@ var treeData = [
                 grade: '5',
                 price: 15000,
                 downloadCount: 1000,
-                listenCount: 5000,
-              },
-            ],
-          },
-        ],
-      },
-    ],
+                listenCount: 5000
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
     id: 436461,
@@ -143,7 +142,7 @@ var treeData = [
     grade: '5',
     price: 20000,
     downloadCount: 1000,
-    listenCount: 5000,
+    listenCount: 5000
   },
   {
     id: 295651,
@@ -157,7 +156,7 @@ var treeData = [
     grade: '2',
     price: 7000,
     downloadCount: 1000,
-    listenCount: 5000,
+    listenCount: 5000
   },
   {
     id: 541713,
@@ -173,7 +172,7 @@ var treeData = [
     downloadCount: 1000,
     listenCount: 5000,
     _attributes: {
-      expanded: false,
+      expanded: true
     },
     _children: [
       {
@@ -189,6 +188,13 @@ var treeData = [
         price: 12000,
         downloadCount: 1000,
         listenCount: 5000,
+        _attributes: {
+          "tree": {
+            "parentRowKey": 10,
+            "childRowKeys": [],
+            "hidden": false
+          }
+        }
       },
       {
         id: 265289,
@@ -203,8 +209,9 @@ var treeData = [
         price: 15000,
         downloadCount: 1000,
         listenCount: 5000,
-      },
-    ],
+
+      }
+    ]
   },
   {
     id: 555871,
@@ -218,7 +225,7 @@ var treeData = [
     grade: '4',
     price: 11000,
     downloadCount: 1000,
-    listenCount: 5000,
+    listenCount: 5000
   },
   {
     id: 550571,
@@ -232,7 +239,7 @@ var treeData = [
     grade: '3',
     price: 30000,
     downloadCount: 1000,
-    listenCount: 5000,
+    listenCount: 5000
   },
   {
     id: 544128,
@@ -246,7 +253,7 @@ var treeData = [
     grade: '2',
     price: 12000,
     downloadCount: 1000,
-    listenCount: 5000,
+    listenCount: 5000
   },
   {
     id: 366374,
@@ -260,7 +267,7 @@ var treeData = [
     grade: '3',
     price: 9000,
     downloadCount: 1000,
-    listenCount: 5000,
+    listenCount: 5000
   },
   {
     id: 8012747,
@@ -274,6 +281,6 @@ var treeData = [
     grade: '5',
     price: 10000,
     downloadCount: 1000,
-    listenCount: 5000,
-  },
+    listenCount: 5000
+  }
 ];

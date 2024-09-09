@@ -67,8 +67,9 @@ function changeExpandedAttr(row: Row, expanded: boolean) {
 function changeHiddenAttr(row: Row, hidden: boolean) {
   const { tree } = row._attributes;
 
+  // filter 적용했을 때 hidden이 true이면 조회되지 않음
   if (tree) {
-    tree.hidden = hidden;
+    tree.hidden = false;
   }
 }
 
