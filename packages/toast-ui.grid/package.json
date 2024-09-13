@@ -1,6 +1,6 @@
 {
   "name": "@wne/tui-grid",
-  "version": "4.21.22",
+  "version": "4.21.22-1",
   "description": "TOAST UI Grid : Powerful data grid control supported by TOAST UI",
   "main": "dist/tui-grid.js",
   "types": "types/index.d.ts",
@@ -9,9 +9,10 @@
     "check-types:all": "tsc --project ./tsconfig-build.json",
     "lint": "eslint src --ext .ts,.tsx",
     "lint:all": "eslint src cypress stories --ext .ts,.tsx",
-    "__dev": "npm run check-types && npm run lint && webpack-dev-server --mode=development",
+    "__dev[lint 적용]": "npm run check-types && npm run lint && webpack-dev-server --mode=development",
     "dev": "npm run check-types && webpack-dev-server --mode=development",
-    "build": "npm run check-types:all && npm run lint:all && (webpack --mode=production & webpack --mode=production --minify) && node ./scripts/tsBannerGenerator.js",
+    "__build[lint 적용]": "npm run check-types:all && npm run lint:all && (webpack --mode=production & webpack --mode=production --minify) && node ./scripts/tsBannerGenerator.js",
+    "build": "npm run check-types:all && (webpack --mode=production & webpack --mode=production --minify) && node ./scripts/tsBannerGenerator.js",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "test-server": "webpack-dev-server",
@@ -25,7 +26,7 @@
     "doc": "npm run ts2js && tuidoc",
     "publish:cdn": "node scripts/publishToCDN.js",
     "update:wrapper": "node scripts/wrapperUpdate.js",
-    "install-publish": "npm publish --git-checks=false --registry http://211.197.235.102/nexus/repository/wne-npm-registry"
+    "install-publish": "npm publish --git-checks=false"
   },
   "repository": {
     "type": "git",
