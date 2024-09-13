@@ -103,7 +103,7 @@ function changeToObservableTreeData(
     const parentRow = findRowByRowKey(data, column, id, row._attributes.tree!.parentRowKey);
     const rawRow = createTreeRawRow(id, row, parentRow || null, column);
     const viewRow = createViewRow(id, rawRow, rawData, column);
-    const foundIndex = findIndexByRowKey(data, column, id, rawRow.rowKey);
+    const foundIndex = findIndexByRowKey(data, column, id, rawRow.rowKey, false);
 
     silentSplice(rawData, foundIndex, 1, rawRow);
     silentSplice(viewData, foundIndex, 1, viewRow);
