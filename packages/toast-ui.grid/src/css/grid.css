@@ -242,6 +242,8 @@
 }
 .tui-grid-cell-has-input .tui-grid-cell-content {
   padding: 4px 5px;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 .tui-grid-cell-has-tree {
   height: inherit;
