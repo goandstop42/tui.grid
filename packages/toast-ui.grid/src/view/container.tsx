@@ -354,7 +354,10 @@ export class ContainerComp extends Component<Props> {
     const { offsetLeft, offsetTop } = this.props;
     const { clientHeight, clientWidth } = this.el!;
     const [pageX, pageY] = getCoordinateWithOffset(ev.pageX, ev.pageY);
-    const bodyArea = findParentByClassName(ev.target as HTMLElement, 'body-area')!;
+    let bodyArea = findParentByClassName(ev.target as HTMLElement, 'body-area')!;
+    if (!bodyArea){
+      bodyArea = findParentByClassName(ev.target as HTMLElement, 'layer-state')!;
+    }
     const side: Side = findParentByClassName(bodyArea, 'lside-area') ? 'L' : 'R';
     const { scrollTop, scrollLeft } = bodyArea;
     const { top, left } = bodyArea.getBoundingClientRect();
@@ -368,7 +371,7 @@ export class ContainerComp extends Component<Props> {
 
     const elementInfo = { scrollTop, scrollLeft, side, top, left };
     const eventInfo = { pageX, pageY };
-
+console.log('show')
     this.props.dispatch('showContextMenu', pos, elementInfo, eventInfo);
   };
 
