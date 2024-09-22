@@ -85,6 +85,134 @@ export class ContainerComp extends Component<Props> {
     },
   };
 
+  componentDidMount() {
+    if (this.props.autoWidth) {
+      window.addEventListener('resize', this.syncWithDOMWidth);
+      // In Preact, the componentDidMount is called before the DOM elements are actually mounted.
+      // https://github.com/preactjs/preact/issues/648
+      // Use setTimeout to wait until the DOM element is actually mounted
+      window.setTimeout(this.syncWithDOMWidth, 0);
+    }
+
+    document.addEventListener('mousedown', this.handleDocumentMouseDown);
+    document.addEventListener('keydown', this.handleDocumentKeyDown);
+  }
+
+  componentWillUnmount() {
+    if (this.props.autoWidth) {
+      window.removeEventListener('resize', this.syncWithDOMWidth);
+    }
+  }
+
+  shouldComponentUpdate(nextProps: Props) {
+    if (this.props.autoWidth && nextProps.autoWidth) {
+      return false;
+    }
+    return true;
+  }
+
+  handleContextMenu = (ev: MouseEvent) => {
+    if (
+      isParentExistWithClassNames(ev.target as HTMLElement, [
+        'cell-header',
+        'cell-dummy',
+        'context-menu',
+      ]) ||
+      !this.context.store.contextMenu.createMenuGroups
+    ) {
+      emitMouseup(this.el!);
+      return;
+    }
+
+    ev.preventDefault();
+
+    const { offsetLeft, offsetTop } = this.props;
+    const { clientHeight, clientWidth } = this.el!;
+    const [pageX, pageY] = getCoordinateWithOffset(ev.pageX, ev.pageY);
+
+    let bodyArea = findParentByClassName(ev.target as HTMLElement, 'body-area')!;
+    if (!bodyArea) {
+      bodyArea = findParentByClassName(ev.target as HTMLElement, 'layer-state')!;
+    }
+
+    const side: Side = findParentByClassName(bodyArea, 'lside-area') ? 'L' : 'R';
+    const { scrollTop, scrollLeft } = bodyArea;
+    const { top, left } = bodyArea.getBoundingClientRect();
+
+    const pos = {
+      top: ev.clientY - offsetTop,
+      left: ev.clientX - offsetLeft,
+      bottom: clientHeight + offsetTop - pageY,
+      right: clientWidth + offsetLeft - pageX,
+    };
+
+    const elementInfo = { scrollTop, scrollLeft, side, top, left };
+    const eventInfo = { pageX, pageY };
+
+    this.props.dispatch('showContextMenu', pos, elementInfo, eventInfo);
+  };
+
+  render() {
+    const {
+      summaryHeight,
+      summaryPosition,
+      heightResizable,
+      gridId,
+      width,
+      autoWidth,
+      scrollXHeight,
+      showLeftSide,
+      scrollX,
+      scrollY,
+      pageOptions,
+    } = this.props;
+    const style = { width: autoWidth ? '100%' : width };
+    const attrs = { [dataAttr.GRID_ID]: gridId };
+
+    return (
+      <div
+        {...attrs}
+        style={style}
+        class={cls('container', [showLeftSide, 'show-lside-area'])}
+        onMouseDown={this.handleMouseDown}
+        onDblClick={this.handleDblClick}
+        onClick={this.handleClick}
+        onMouseOut={this.handleMouseout}
+        onMouseOver={this.handleMouseover}
+        onTouchStart={this.handleTouchStart}
+        onTouchMove={this.handleTouchMove}
+        onTouchEnd={this.handleTouchEnd}
+        onContextMenu={this.handleContextMenu}
+        ref={(el) => {
+          this.el = el;
+        }}
+      >
+        {pageOptions.position === 'top' && <Pagination />}
+        <div
+          class={cls(
+            'content-area',
+            [!!summaryHeight, summaryPosition === 'top' ? 'has-summary-top' : 'has-summary-bottom'],
+            [!scrollX, 'no-scroll-x'],
+            [!scrollY, 'no-scroll-y']
+          )}
+        >
+          <LeftSide />
+          <RightSide />
+          <div class={cls('border-line', 'border-line-top')} />
+          <div class={cls('border-line', 'border-line-left')} />
+          <div class={cls('border-line', 'border-line-right')} />
+          <div class={cls('border-line', 'border-line-bottom')} style={{ bottom: scrollXHeight }} />
+        </div>
+        {heightResizable && <HeightResizeHandle />}
+        <StateLayer />
+        <Clipboard />
+        {pageOptions.position === 'bottom' && <Pagination />}
+        <FilterLayer />
+        <ContextMenu />
+      </div>
+    );
+  }
+
   private handleTouchStart = () => {
     if (!this.el || !isMobile()) {
       return;
@@ -282,19 +410,6 @@ export class ContainerComp extends Component<Props> {
     }
   }
 
-  componentDidMount() {
-    if (this.props.autoWidth) {
-      window.addEventListener('resize', this.syncWithDOMWidth);
-      // In Preact, the componentDidMount is called before the DOM elements are actually mounted.
-      // https://github.com/preactjs/preact/issues/648
-      // Use setTimeout to wait until the DOM element is actually mounted
-      window.setTimeout(this.syncWithDOMWidth, 0);
-    }
-
-    document.addEventListener('mousedown', this.handleDocumentMouseDown);
-    document.addEventListener('keydown', this.handleDocumentKeyDown);
-  }
-
   private handleDocumentKeyDown = (ev: KeyboardEvent) => {
     const keyName = (keyNameMap as KeyNameMap)[ev.keyCode];
     if (keyName === 'esc') {
@@ -319,119 +434,9 @@ export class ContainerComp extends Component<Props> {
     }
   };
 
-  componentWillUnmount() {
-    if (this.props.autoWidth) {
-      window.removeEventListener('resize', this.syncWithDOMWidth);
-    }
-  }
-
   private syncWithDOMWidth = () => {
     this.props.dispatch('refreshLayout', this.el!, this.props.rootElement.parentElement!);
   };
-
-  shouldComponentUpdate(nextProps: Props) {
-    if (this.props.autoWidth && nextProps.autoWidth) {
-      return false;
-    }
-    return true;
-  }
-
-  handleContextMenu = (ev: MouseEvent) => {
-    if (
-      isParentExistWithClassNames(ev.target as HTMLElement, [
-        'cell-header',
-        'cell-dummy',
-        'context-menu',
-      ]) ||
-      !this.context.store.contextMenu.createMenuGroups
-    ) {
-      emitMouseup(this.el!);
-      return;
-    }
-
-    ev.preventDefault();
-
-    const { offsetLeft, offsetTop } = this.props;
-    const { clientHeight, clientWidth } = this.el!;
-    const [pageX, pageY] = getCoordinateWithOffset(ev.pageX, ev.pageY);
-    const bodyArea = findParentByClassName(ev.target as HTMLElement, 'body-area')!;
-    const side: Side = findParentByClassName(bodyArea, 'lside-area') ? 'L' : 'R';
-    const { scrollTop, scrollLeft } = bodyArea;
-    const { top, left } = bodyArea.getBoundingClientRect();
-
-    const pos = {
-      top: ev.clientY - offsetTop,
-      left: ev.clientX - offsetLeft,
-      bottom: clientHeight + offsetTop - pageY,
-      right: clientWidth + offsetLeft - pageX,
-    };
-
-    const elementInfo = { scrollTop, scrollLeft, side, top, left };
-    const eventInfo = { pageX, pageY };
-
-    this.props.dispatch('showContextMenu', pos, elementInfo, eventInfo);
-  };
-
-  render() {
-    const {
-      summaryHeight,
-      summaryPosition,
-      heightResizable,
-      gridId,
-      width,
-      autoWidth,
-      scrollXHeight,
-      showLeftSide,
-      scrollX,
-      scrollY,
-      pageOptions,
-    } = this.props;
-    const style = { width: autoWidth ? '100%' : width };
-    const attrs = { [dataAttr.GRID_ID]: gridId };
-
-    return (
-      <div
-        {...attrs}
-        style={style}
-        class={cls('container', [showLeftSide, 'show-lside-area'])}
-        onMouseDown={this.handleMouseDown}
-        onDblClick={this.handleDblClick}
-        onClick={this.handleClick}
-        onMouseOut={this.handleMouseout}
-        onMouseOver={this.handleMouseover}
-        onTouchStart={this.handleTouchStart}
-        onTouchMove={this.handleTouchMove}
-        onTouchEnd={this.handleTouchEnd}
-        onContextMenu={this.handleContextMenu}
-        ref={(el) => {
-          this.el = el;
-        }}
-      >
-        {pageOptions.position === 'top' && <Pagination />}
-        <div
-          class={cls(
-            'content-area',
-            [!!summaryHeight, summaryPosition === 'top' ? 'has-summary-top' : 'has-summary-bottom'],
-            [!scrollX, 'no-scroll-x'],
-            [!scrollY, 'no-scroll-y']
-          )}
-        >
-          <LeftSide />
-          <RightSide />
-          <div class={cls('border-line', 'border-line-top')} />
-          <div class={cls('border-line', 'border-line-left')} />
-          <div class={cls('border-line', 'border-line-right')} />
-          <div class={cls('border-line', 'border-line-bottom')} style={{ bottom: scrollXHeight }} />
-        </div>
-        {heightResizable && <HeightResizeHandle />}
-        <StateLayer />
-        <Clipboard />
-        {pageOptions.position === 'bottom' && <Pagination />}
-        <FilterLayer />
-        <ContextMenu />
-      </div>
-    );
-  }
 }
 
 export const Container = connect<StoreProps, OwnProps>(
