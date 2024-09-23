@@ -1,6 +1,6 @@
 {
   "name": "@wne/tui-grid",
-  "version": "4.21.22-1",
+  "version": "4.21.22-2",
   "description": "TOAST UI Grid : Powerful data grid control supported by TOAST UI",
   "main": "dist/tui-grid.js",
   "types": "types/index.d.ts",
@@ -26,7 +26,7 @@
     "doc": "npm run ts2js && tuidoc",
     "publish:cdn": "node scripts/publishToCDN.js",
     "update:wrapper": "node scripts/wrapperUpdate.js",
-    "install-publish": "npm publish --git-checks=false"
+    "install-publish": "npm publish --git-checks=false --registry http://wine-web/nexus/repository/wne-npm-registry"
   },
   "repository": {
     "type": "git",
