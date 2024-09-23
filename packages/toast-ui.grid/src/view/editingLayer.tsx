@@ -149,7 +149,9 @@ export class EditingLayerComp extends Component<Props> {
       return null;
     }
     document.addEventListener('click', (event) => {
-      if ((event.target as Node).parentElement !== this.contentEl) {
+      // grid 영역외에 선택했을 때 editor 모드를 취소한다.
+      const gridEl = grid.el;
+      if (!gridEl.contains(event.target as Node)) {
         grid.cancelEditing();
       }
     });
@@ -165,19 +167,6 @@ export class EditingLayerComp extends Component<Props> {
       height: top ? height + cellBorderWidth : height,
       lineHeight: top ? `${height - cellBorderWidth}px` : `${height - cellBorderWidth * 2}px`,
     };
-
-    // document.addEventListener('click', function (event) {
-    //     if (isEmpty(el)) {
-    //         return
-    //     }
-    //     console.log('el.grid event.target >> ', event.target)
-    //     console.log('el.grid el >> ', el)
-    //     // console.log('el.grid >> ', event.target !== el)
-    //     if (event.target !== el) {
-    //         grid.cancelEditing()
-    //         event.stopPropagation();
-    //     }
-    // });
 
     return (
       <div
