@@ -149,9 +149,14 @@ export class EditingLayerComp extends Component<Props> {
       return null;
     }
     document.addEventListener('click', (event) => {
-      // grid 영역외에 선택했을 때 editor 모드를 취소한다.
       const gridEl = grid.el;
-      if (!gridEl.contains(event.target as Node)) {
+
+      // grid 영역외에 선택했을 때 editor 모드를 취소한다.
+      if (
+        (gridEl && !gridEl.contains(event.target as Node)) ||
+        (event.target instanceof HTMLElement &&
+          event.target.classList.contains('tui-grid-body-area'))
+      ) {
         grid.finishEditing();
       }
     });
