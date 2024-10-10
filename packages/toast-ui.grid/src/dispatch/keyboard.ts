@@ -211,7 +211,7 @@ function applyCopiedData(store: Store, copiedData: string[][], range: SelectionR
     row: [startRowIndex, endRowIndex],
     column: [startColumnIndex, endColumnIndex],
   } = range;
-
+  console.log('startRowIndex, endRowIndex >> ', startRowIndex, endRowIndex);
   const columnNames = mapProp('name', visibleColumnsWithRowHeader);
   const changeValueFns = [];
   const prevChanges = [];
@@ -273,16 +273,9 @@ export function paste(store: Store, copiedData: string[][]) {
     }
     result.push(rowObject);
   }
-  // console.log('result >> ', result, endRowIndex - viewData.length + 1);
-  // console.log('result >> viewData ', viewData);
-  // console.log('result >> viewData.length ', viewData.length);
-  // console.log('result >> endRowIndex ', endRowIndex, endRowIndex > viewData.length - 1);
-
-  // console.log('visibleColumnsWithRowHeader >> ', visibleColumnsWithRowHeader, copiedData);
 
   if (endRowIndex > viewData.length - 1) {
     const modifiedResult = result.slice(-(endRowIndex - viewData.length + 1));
-    // console.log('result modifiedResult >> ', modifiedResult);
     appendRows(
       store,
       // [...Array(endRowIndex - viewData.length + 1)].map(() => ({}))
@@ -291,15 +284,18 @@ export function paste(store: Store, copiedData: string[][]) {
     );
   } else {
     const currentInstance = getInstance(id);
+
     let resultIndex = 0;
-    for (let i = startRowIndex; i <= endRowIndex; i += 1) {
-      const currentRow = currentInstance.getRow(i)!;
+    // rowKey로 행 정보를 가져오지 않고 rowIndex를 이용한다.
+    for (let i = store.focus?.rowIndex ?? 0; i <= endRowIndex; i += 1) {
+      // const currentRow = currentInstance.getRow()!;
+      const currentRow = currentInstance.getRowAt(i)!;
       const modifiedCopiedData = result[resultIndex] as { [key: string]: any };
 
       updateRow(currentRow, modifiedCopiedData, columnNames);
 
-      resultIndex += 1;
       currentInstance.setRow(currentRow.rowKey, currentRow);
+      resultIndex += 1;
     }
   }
   applyCopiedData(store, copiedData, rangeToPaste);
