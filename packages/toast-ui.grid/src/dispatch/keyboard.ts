@@ -16,6 +16,9 @@ import { mapProp } from '../helper/common';
 import { CellChange, Origin } from '@t/event';
 import { updateAllSummaryValues } from './summary';
 import { appendRows, updateHeights } from './data';
+import { isEditingCell } from '../query/focus';
+import {Focus} from "@t/store/focus";
+import {ViewRow} from "@t/store/data";
 
 type ChangeValueFn = () => number;
 interface ChangeInfo {
@@ -211,7 +214,6 @@ function applyCopiedData(store: Store, copiedData: string[][], range: SelectionR
     row: [startRowIndex, endRowIndex],
     column: [startColumnIndex, endColumnIndex],
   } = range;
-  console.log('startRowIndex, endRowIndex >> ', startRowIndex, endRowIndex);
   const columnNames = mapProp('name', visibleColumnsWithRowHeader);
   const changeValueFns = [];
   const prevChanges = [];
@@ -223,8 +225,8 @@ function applyCopiedData(store: Store, copiedData: string[][], range: SelectionR
       const name = columnNames[columnIndex + startColumnIndex];
       if (filteredViewData.length && isEditableCell(store, rawRowIndex, name)) {
         const targetRow = filteredRawData[rawRowIndex];
-        // console.log('filteredRawData[rawRowIndex] >> ', filteredRawData[rawRowIndex], rawRowIndex);
-        // console.log('targetRow[rawRowIndex] >> ', targetRow);
+        // //console.log('filteredRawData[rawRowIndex] >> ', filteredRawData[rawRowIndex], rawRowIndex);
+        // //console.log('targetRow[rawRowIndex] >> ', targetRow);
         const { prevChange, nextChange, changeValue } = createChangeInfo(
           store,
           targetRow,
@@ -245,9 +247,24 @@ export function paste(store: Store, copiedData: string[][]) {
   const {
     selection,
     id,
-    data: { viewData },
+    data: { viewData, filteredViewData },
     column: { visibleColumnsWithRowHeader },
+    focus,
   } = store;
+
+
+  // editable 아닌 컬럼은 copy & paste 안 되도록 함
+  const focusKey = focus.rowKey || '';
+  const focusColumnName = focus.columnName || '';
+  if (focus.rowKey) {
+    const editable = (filteredViewData as { [key: string]: any })[focusKey]?.valueMap[
+      focusColumnName
+    ]?.editable;
+    if (!editable) {
+      return;
+    }
+  }
+
   const { originalRange } = selection;
 
   if (originalRange) {
@@ -264,7 +281,7 @@ export function paste(store: Store, copiedData: string[][]) {
   } = rangeToPaste;
 
   const columnNames = mapProp('name', visibleColumnsWithRowHeader);
-
+  console.log('columnNames >> ', visibleColumnsWithRowHeader);
   for (let rowIndex = 0; rowIndex + startRowIndex <= endRowIndex; rowIndex += 1) {
     const rowObject = {};
     for (let columnIndex = 0; columnIndex + startColumnIndex <= endColumnIndex; columnIndex += 1) {
