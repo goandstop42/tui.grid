@@ -260,6 +260,7 @@ export function paste(store: Store, copiedData: string[][]) {
     const editable = (filteredViewData as { [key: string]: any })[focusKey]?.valueMap[
       focusColumnName
     ]?.editable;
+
     if (!editable) {
       return;
     }
@@ -281,7 +282,6 @@ export function paste(store: Store, copiedData: string[][]) {
   } = rangeToPaste;
 
   const columnNames = mapProp('name', visibleColumnsWithRowHeader);
-  console.log('columnNames >> ', visibleColumnsWithRowHeader);
   for (let rowIndex = 0; rowIndex + startRowIndex <= endRowIndex; rowIndex += 1) {
     const rowObject = {};
     for (let columnIndex = 0; columnIndex + startColumnIndex <= endColumnIndex; columnIndex += 1) {

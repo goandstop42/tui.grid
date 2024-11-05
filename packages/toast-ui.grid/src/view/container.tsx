@@ -298,6 +298,12 @@ export class ContainerComp extends Component<Props> {
 
     const gridEvent = new GridEvent({ event });
 
+    // TargetType 이 'rowHeader' | 'columnHeader' | 'dummy' | 'cell' 가 아닌
+    // 'etc' 인 경우는 이벤트(click/dbclick)를 발생시키지 않는다.
+    if ((gridEvent as any).targetType === 'etc') {
+      return;
+    }
+
     /**
      * Occurs when a mouse button is clicked on the Grid.
      * The properties of the event object include the native event object.
@@ -379,8 +385,14 @@ export class ContainerComp extends Component<Props> {
     }
 
     const { eventBus, editingEvent } = this.props;
+
     const gridEvent = new GridEvent({ event });
 
+    // TargetType 이 'rowHeader' | 'columnHeader' | 'dummy' | 'cell' 가 아닌
+    // 'etc' 인 경우는 이벤트(click/dbclick)를 발생시키지 않는다.
+    if ((gridEvent as any).targetType === 'etc') {
+      return;
+    }
     /**
      * Occurs when a mouse button is double clicked on the Grid.
      * The properties of the event object include the native event object.
