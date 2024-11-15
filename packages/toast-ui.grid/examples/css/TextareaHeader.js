@@ -39,17 +39,23 @@ export class TextareaHeader {
   }
 
   getValue() {
-    console.log('this.el.value >> ', this.el.value);
+    //console.log('this.el.value >> ', this.el.value);
     return this.el.value;
   }
 
   getElement() {
+    //console.log('this.el >> ', this.el);
     return this.el;
   }
 
   mounted() {
+    //console.log('mount >> ', this);
     this.el.select();
     this.el.focus();
     // this.el.scrollLeft = 0;
+  }
+
+  beforeDestory(){
+    //console.log('beforeDestory >> ', this);
   }
 }

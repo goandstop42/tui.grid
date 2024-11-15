@@ -16,7 +16,7 @@ export function changeSelectionRange(
     const eventBus = getEventBus(id);
     const gridEvent = new GridEvent({ range: selection.rangeWithRowHeader });
     //grid drag 하면 이벤트로 호출되어 범위 계산함
-    //console.log('selection.rangeWithRowHeader  >> ', selection.rangeWithRowHeader )
+    ////console.log('selection.rangeWithRowHeader  >> ', selection.rangeWithRowHeader )
     /**
      * Occurs when selecting cells
      * @event Grid#selection

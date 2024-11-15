@@ -292,7 +292,7 @@ export function convertTableToData(rows: HTMLCollectionOf<HTMLTableRowElement>) 
         .join('\n')
         .trim();
 
-      console.log('Processed text:', processedText);
+      //console.log('Processed text:', processedText);
 
       while (data[rowIndex][columnIndex]) {
         columnIndex += 1;

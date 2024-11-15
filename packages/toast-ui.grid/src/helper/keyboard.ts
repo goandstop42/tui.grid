@@ -125,14 +125,14 @@ export function getKeyStrokeString(ev: KeyboardEvent): KeyStrokeCommandType {
   if (keyCode in keyNameMap) {
     keys.push(keyNameMap[keyCode as KeyCodeType]);
   }
-  // console.log("keys >> ",keys.join('-'))
+  // //console.log("keys >> ",keys.join('-'))
 
   return keys.join('-');
 }
 
 export function keyEventGenerate(ev: KeyboardEvent) {
   const keyStroke = getKeyStrokeString(ev);
-  // console.log('keyStroke >> ', keyStroke)
+  // //console.log('keyStroke >> ', keyStroke)
   const commandInfo = keyStrokeCommandMap[keyStroke];
 
   return commandInfo

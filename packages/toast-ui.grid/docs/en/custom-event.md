@@ -14,11 +14,11 @@ const grid = new Grid({
 });
 
 grid.on('click', function() {
-  console.log('clicked!!');
+  //console.log('clicked!!');
 })
 
 grid.on('dblclick', function() {
-  console.log('double clicked!!');
+  //console.log('double clicked!!');
 });
 ```
 
@@ -42,19 +42,19 @@ const grid = new Grid({
       header: 'Name',
       name: 'name',
       onBeforeChange(ev) {
-        console.log('Before change:' + ev);
+        //console.log('Before change:' + ev);
       },
       onAfterChange(ev) {
-        console.log('After change:' + ev);
+        //console.log('After change:' + ev);
       },
       editor: 'text',
     }
   ],
   onGridMounted(ev) {
-    console.log('mounted' + ev);
+    //console.log('mounted' + ev);
   },
   onGridBeforeDestroy(ev) {
-    console.log('before destroy' + ev);
+    //console.log('before destroy' + ev);
   }
 });
 ```
@@ -84,7 +84,7 @@ The `GridEvent` instance can have a `nativeEvent` property, this is the browser'
 
 ```javascript
 grid.on('mousedown', function(ev) {
-  console.log(ev.nativeEvent);
+  //console.log(ev.nativeEvent);
 });
 ```
 

@@ -168,11 +168,11 @@
       ]
     });
     grid.on('beforeChange', ev => {
-      console.log('before change:', ev);
+      //console.log('before change:', ev);
       // grid.appendRows(createRows());
     });
     grid.on('afterChange', ev => {
-      console.log('after change:', ev);
+      //console.log('after change:', ev);
         // grid.appendRows(createRows());
     })
 
@@ -218,13 +218,13 @@
 
 
     // grid.resetData(gridData);
-    // console.log('getModifiedRows 1', grid.getModifiedRows())
+    // //console.log('getModifiedRows 1', grid.getModifiedRows())
     // grid.appendRow(rowData,{at:0});
-    // console.log('getModifiedRows 2', grid.getModifiedRows())
+    // //console.log('getModifiedRows 2', grid.getModifiedRows())
     // const createdRows = grid.getModifiedRows().createdRows()
-    // console.log('createdRows >> ', createdRows)
+    // //console.log('createdRows >> ', createdRows)
     // grid.on('editingStart', function(ev){
-    //   console.log('Start');
+    //   //console.log('Start');
     // });
     grid.resetData(gridData);
     // grid.dataManager.push('DELETE', [rowData])
@@ -246,10 +246,10 @@
 
     // grid.dataManager.push('DELETE', [rowData])
 
-    console.log("grid  >> ", grid);
-    // console.log("grid  >> ", grid.dataManager.getData);
+    //console.log("grid  >> ", grid);
+    // //console.log("grid  >> ", grid.dataManager.getData);
 
-    // console.log("grid getModifiedData  >> ", grid.dataManager.getModifiedData({}));
+    // //console.log("grid getModifiedData  >> ", grid.dataManager.getModifiedData({}));
     function addRow(){
       grid.addRowClassName(0, 'removed-row');
       grid.getRow(0);
@@ -257,26 +257,26 @@
     }
     function removeRow2(){
 
-      console.log("removeTest >> before  getModifiedRows >> ", grid.getModifiedRows());
+      //console.log("removeTest >> before  getModifiedRows >> ", grid.getModifiedRows());
 
       const focusedCell = grid.getFocusedCell();
       grid.addRowClassName(focusedCell.rowKey, 'removed-row');
 
       const removedRow = grid.store.data.rawData.find(row => row.rowKey === focusedCell.rowKey);
-      console.log('removedRow >> ', removedRow, grid.getData());
+      //console.log('removedRow >> ', removedRow, grid.getData());
       // grid.removeRowTest(focusedCell.rowKey);  // 필요 시 주석 해제
       if (removedRow) {
         grid.dataManager.push('DELETE', [removedRow]);
       }
 
-      console.log("removeTest >> grid.dataManager ", grid.dataManager);
-      console.log("removeTest >> grid.dataManager ",  grid.dataManager.splice("UPDATE", [removedRow.rowKey]));
-      console.log("removeTest >>  getModifiedRows >> ", grid.getModifiedRows());
+      //console.log("removeTest >> grid.dataManager ", grid.dataManager);
+      //console.log("removeTest >> grid.dataManager ",  grid.dataManager.splice("UPDATE", [removedRow.rowKey]));
+      //console.log("removeTest >>  getModifiedRows >> ", grid.getModifiedRows());
     }
 
 
     function getModify(){
-      console.log("grid dataManager >> ", grid.getModifiedRows());
+      //console.log("grid dataManager >> ", grid.getModifiedRows());
     }
 
     function appendRow(){
@@ -299,12 +299,12 @@
     }
     //grid.addRowClassName(2, 'removed-row');
     grid.getRow(1)._attributes.className.row.push('removed-row');
-    console.log(grid.getRow(1));
+    //console.log(grid.getRow(1));
 
 
     function findIndexByRowKey(data, rowKey) {
 
-      console.log("findIndexByRowKey >> ", data, rowKey)
+      //console.log("findIndexByRowKey >> ", data, rowKey)
 
       for (let i = 0; i < data.length; i++) {
         if (data[i].rowKey === rowKey) {

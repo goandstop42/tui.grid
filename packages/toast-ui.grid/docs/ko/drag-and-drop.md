@@ -90,7 +90,7 @@ public moveColumn(columnName: string, targetIndex: number): void;
 
 ```ts
 grid.on('dragStart', ev => {
-  console.log(ev);
+  //console.log(ev);
   // row
   //   ev.rowKey - The rowKey of the row to drag
   //   ev.floatingRow - The floating row DOM element
@@ -105,7 +105,7 @@ grid.on('dragStart', ev => {
 
 ```ts
 grid.on('drag', ev => {
-  console.log(ev);
+  //console.log(ev);
   // row
   //   ev.rowKey - The rowKey of the dragging row
   //   ev.targetRowKey - The rowKey of the row at current dragging position
@@ -121,7 +121,7 @@ grid.on('drag', ev => {
 
 ```ts
 grid.on('drop', ev => {
-  console.log(ev);
+  //console.log(ev);
   // row
   //   ev.rowKey - The rowKey of the dragging row
   //   ev.targetRowKey - The rowKey of the row at current dragging position

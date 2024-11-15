@@ -53,7 +53,7 @@
           filter: 'number'
         },
         {
-          header: 'Release',
+          header: '',
           name: 'release',
           filter: {
             type: 'date',
@@ -72,5 +72,13 @@
         }
       ]
     });
+
+    grid.on('dblclick', (ev) => {
+      console.log('double clicked!!', ev);
+    });
+    grid.on('click', (ev) => {
+      console.log(' clicked!!', ev);
+    });
+
   </script>
 </html>

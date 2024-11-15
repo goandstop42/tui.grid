@@ -191,7 +191,7 @@ grid.setFilter(columnName, filterOpt);
 
 ```js
 grid.on('filter', ev => {
-  console.log(ev);
+  //console.log(ev);
   // ev.instance - Current grid instance
   // ev.filterState - filterState
 });

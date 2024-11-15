@@ -108,8 +108,8 @@ grid.on('expand', (ev) => {
   const {rowKey} = ev;
   const descendantRows = grid.getDescendantRows(rowKey);
 
-  console.log('rowKey: ' + rowKey);
-  console.log('descendantRows: ' + descendantRows);
+  //console.log('rowKey: ' + rowKey);
+  //console.log('descendantRows: ' + descendantRows);
 });
 ```
 

@@ -61,7 +61,7 @@ const EXCEED_RATIO = 0.8;
 
 // drag 할 때 보이는 row html
 function createRow(height: string) {
-  // console.log('createRow >> ')
+  // //console.log('createRow >> ')
   const row = document.createElement('div');
   row.className = cls('floating-row');
   row.style.height = height;
@@ -124,11 +124,11 @@ function createFloatingDraggableRow(
   const { data, column, id } = store;
   const { treeColumnName } = column;
   const cells = fromArray(posInfo.container!.querySelectorAll(`[data-row-key="${rowKey}"]`));
-  // console.log('createFloatingDraggableRow  cells >> ', cells)
+  // //console.log('createFloatingDraggableRow  cells >> ', cells)
   // get original table row height
   const height = `${cells[0].parentElement!.clientHeight}px`;
   const row = createRow(height);
-  //console.log('createFloatingDraggableRow row >> ',row)
+  ////console.log('createFloatingDraggableRow row >> ',row)
   row.style.left = `${offsetLeft}px`;
   row.style.top = `${offsetTop}px`;
 
@@ -163,7 +163,7 @@ function createFloatingDraggableColumn(store: Store, colunmName: string, posInfo
 }
 
 export function createDraggableRowInfo(store: Store, posInfo: PosInfo): DraggableRowInfo | null {
-  //  console.log('createDraggableRowInfo >> ')
+  //  //console.log('createDraggableRowInfo >> ')
 
   const { data, dimension } = store;
   const { rawData, filters } = data;
@@ -199,7 +199,7 @@ export function getMovedPosAndIndexOfRow(
   store: Store,
   { pageX, pageY, left, top, scrollTop, rowKey }: PosInfo
 ): MovedIndexAndPosInfoOfRow {
-  // console.log('rowKey  getMovedPosAndIndexOfRow  >> ', rowKey)
+  // //console.log('rowKey  getMovedPosAndIndexOfRow  >> ', rowKey)
   const { rowCoords, dimension, column, data } = store;
   const { heights, offsets } = rowCoords;
   const { rawData } = data;
@@ -207,7 +207,7 @@ export function getMovedPosAndIndexOfRow(
   const offsetLeft = pageX - left;
   const offsetTop = pageY - top + scrollTop;
   let index = findOffsetIndex(rowCoords.offsets, offsetTop);
-  // console.log('offsetLeft >> ', offsetLeft)
+  // //console.log('offsetLeft >> ', offsetLeft)
   // move to next index when exceeding the height with ratio
 
   
@@ -215,14 +215,14 @@ export function getMovedPosAndIndexOfRow(
   // Check if the dragged item is out of the grid horizontally
   if (offsetLeft < 0 || offsetLeft > width) {
     index = Number(rowKey);
-    // console.log('out of the grid horizontally ', offsetLeft)
+    // //console.log('out of the grid horizontally ', offsetLeft)
   }
   
   if (!column.treeColumnName) {
     // When moving within the grid
     // index 선택 로우
     if (index < rawData.length - 1 && offsetTop - offsets[index] > heights[index] * EXCEED_RATIO) {
-      // console.log("getMovedPosAndIndexOfRow >> index < rawData.length - 1   > ", index < rawData.length - 1)
+      // //console.log("getMovedPosAndIndexOfRow >> index < rawData.length - 1   > ", index < rawData.length - 1)
       index += 1;
     }
   }
@@ -234,12 +234,12 @@ export function getMovedPosAndIndexOfRow(
     if (rowKey !== null) {
       index = Number(rowKey);
     }
-    // console.log('out of the grid vertically >> ',rowKey , index, offsetLeft, offsetTop, store)
+    // //console.log('out of the grid vertically >> ',rowKey , index, offsetLeft, offsetTop, store)
   }
 
   // if (offsetLeft < 0 || offsetLeft > width) {
   //   index = Number(rowKey);
-  //   console.log('좌우 벗어남 offsetLeft', offsetLeft )
+  //   //console.log('좌우 벗어남 offsetLeft', offsetLeft )
   // }
 
 
@@ -247,8 +247,8 @@ export function getMovedPosAndIndexOfRow(
   //   // grid 안에서 이동할 때
   //   // index 선택 로우
   //   if (index < rawData.length - 1 && offsetTop - offsets[index] > heights[index] * EXCEED_RATIO) {
-  //     console.log("getMovedPosAndIndexOfRow >> index < rawData.length - 1   > ", index < rawData.length - 1 )
-  //     // console.log("getMovedPosAndIndexOfRow >> offsetTop - offsets[index] > heights[index] * EXCEED_RATIO   > ", offsetTop - offsets[index] > heights[index] * EXCEED_RATIO )
+  //     //console.log("getMovedPosAndIndexOfRow >> index < rawData.length - 1   > ", index < rawData.length - 1 )
+  //     // //console.log("getMovedPosAndIndexOfRow >> offsetTop - offsets[index] > heights[index] * EXCEED_RATIO   > ", offsetTop - offsets[index] > heights[index] * EXCEED_RATIO )
   //     index += 1;
   //   } else if (
   //     offsetTop - heights[index] <= -heights[index] ||
@@ -257,7 +257,7 @@ export function getMovedPosAndIndexOfRow(
   //     if (rowKey !== null) {
   //       index = Number(rowKey);
   //     }
-  //     // console.log('getMovedPosAndIndexOfRow out of grid >> ',rowKey , index, offsetLeft, offsetTop, store)
+  //     // //console.log('getMovedPosAndIndexOfRow out of grid >> ',rowKey , index, offsetLeft, offsetTop, store)
   //   }
   // }
   let height = offsets[index] - scrollTop + headerHeight;
@@ -326,7 +326,7 @@ export function getResolvedOffsets(
 ) {
   const { width: bodyWidth, bodyHeight, scrollXHeight } = dimension;
   // const offRight = bodyWidth - (offsetLeft + width);
-  // console.log('width >> ', width, offRight)
+  // //console.log('width >> ', width, offRight)
 
   return {
     offsetLeft,

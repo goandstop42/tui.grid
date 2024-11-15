@@ -24,7 +24,7 @@ export function showContextMenu(
   const columnName = visibleColumnsBySideWithRowHeader[side][columnIndex].name;
 
   const rowIndex = findOffsetIndex(rowCoords.offsets, offsetTop);
-  // console.log('rowIndex > ', rowIndex, data.rawData, data.filteredRawData.length)
+  // //console.log('rowIndex > ', rowIndex, data.rawData, data.filteredRawData.length)
   let rowKey: number | string = 1;
   if (data.filteredRawData.length) {
     rowKey = getRowKeyByIndexWithPageRange(data, rowIndex);

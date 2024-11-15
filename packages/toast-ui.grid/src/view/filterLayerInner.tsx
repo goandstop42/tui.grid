@@ -125,7 +125,8 @@ export class FilterLayerInnerComp extends Component<Props> {
           {showClearBtn && (
             <button
               className={cls('filter-btn', 'filter-btn-clear')}
-              onClick={() => {
+              onClick={(event) => {
+                event.stopPropagation();
                 dispatch('clearActiveFilterState');
               }}
               type="button"

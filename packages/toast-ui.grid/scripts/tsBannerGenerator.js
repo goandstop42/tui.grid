@@ -20,6 +20,6 @@ fs.readFile(declareFilePath, 'utf8', (error, data) => {
     if (error) {
       throw error;
     }
-    console.log('Completed Write Banner for Typescript!');
+    //console.log('Completed Write Banner for Typescript!');
   });
 });

@@ -742,7 +742,7 @@ export function resetData(store: Store, inputData: OptRow[], options: ResetOptio
 export function addRowClassName(store: Store, rowKey: RowKey, className: string) {
   const { data, column, id } = store;
   const row = findRowByRowKey(data, column, id, rowKey, false);
-  // console.log('addRowClassName >> ', rowKey, row, data)
+  // //console.log('addRowClassName >> ', rowKey, row, data)
   if (row) {
     const rowClassMap = row._attributes.className.row;
     const isExist = includes(rowClassMap, className);
@@ -963,7 +963,7 @@ export function setRows(store: Store, rows: OptRow[]) {
 }
 
 export function moveRow(store: Store, rowKey: RowKey, targetIndex: number) {
-  //  console.log('moveRow start typeof rowKey >> ', typeof rowKey, targetIndex, rowKey)
+  //  //console.log('moveRow start typeof rowKey >> ', typeof rowKey, targetIndex, rowKey)
   const { data, column, id } = store;
   const { rawData, viewData } = data;
 

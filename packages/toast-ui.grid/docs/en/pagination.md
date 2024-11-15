@@ -65,7 +65,7 @@ The pagination methods can be called as such.
 ```js
 const pagination = grid.getPagination();
 const currentPage = pagination.getCurrentPage();
-console.log(currentPage);
+//console.log(currentPage);
 
 grid.setPerPage(10);
 ```

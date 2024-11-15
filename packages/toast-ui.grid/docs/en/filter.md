@@ -191,7 +191,7 @@ As for custom events, you can make it so that the `filter` event is emitted when
 
 ```js
 grid.on('filter', ev => {
-  console.log(ev);
+  //console.log(ev);
   // ev.instance - Current grid instance
   // ev.filterState - filterState
 });

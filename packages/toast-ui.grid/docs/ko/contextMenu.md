@@ -22,7 +22,7 @@ const grid = Grid({
           name: 'id2',
           label: 'menu2',
           action: () => {
-            console.log('menu2');
+            //console.log('menu2');
           },
           subMenu: [
             {
@@ -37,7 +37,7 @@ const grid = Grid({
           name: 'id4',
           label: 'menu3',
           action: () => {
-            console.log('menu3');
+            //console.log('menu3');
           }
         },
       ],

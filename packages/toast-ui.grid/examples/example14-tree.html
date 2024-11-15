@@ -1,100 +1,195 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <title>14. Tree</title>
-    <link rel="stylesheet" type="text/css" href="./css/tui-example-style.css" />
-    <link rel="stylesheet" type="text/css" href="../dist/tui-grid.css" />
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <title>14. Tree</title>
+  <link rel="stylesheet" type="text/css" href="./css/tui-example-style.css" />
+  <link rel="stylesheet" type="text/css" href="../dist/tui-grid.css" />
+</head>
 
-  <body>
-    <div class="description">
-      You can check for custom events in the console.<br />
-      You can see the tutorial
-      <a
-        href="https://github.com/nhn/tui.grid/blob/master/packages/toast-ui.grid/docs/en/tree.md"
-        target="_blank"
-        >here</a
-      >.
-      <br/>
-      <strong>The example code can be slower than your environment because the code is transpiled by babel-standalone in runtime.</strong>
-    </div>
-    <div class="contents">
-      <div class="code-html">
-        <div id="grid"></div>
-      </div>
-    </div>
-  </body>
-  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
-  <script type="text/javascript" src="../dist/tui-grid.js"></script>
-  <script type="text/javascript" src="./data/tree-dummy.js"></script>
-  <script type="text/babel" class="code-js">
-    const grid = new tui.Grid({
-      el: document.getElementById('grid'),
-      data: treeData,
-      rowHeaders: ['checkbox'],
-      bodyHeight: 500,
-      treeColumnOptions: {
+<body>
+<div class="description">
+  You can check for custom events in the console.<br />
+  You can see the tutorial
+  <a
+          href="https://github.com/nhn/tui.grid/blob/master/packages/toast-ui.grid/docs/en/tree.md"
+          target="_blank"
+  >here</a
+  >.
+  <br/>
+  <strong>The example code can be slower than your environment because the code is transpiled by babel-standalone in runtime.</strong>
+</div>
+<div class="contents">
+  <div class="code-html">
+    <div id="grid"></div>
+  </div>
+</div>
+<button type="button" onclick="addRow()">add</button>
+<button type="button" onclick="reset()">modifiedData</button>
+</body>
+<script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+<script type="text/javascript" src="../dist/tui-grid.js"></script>
+<script type="text/javascript" src="./data/tree-dummy.js"></script>
+<script type="text/javascript" src="./data/tree-pre_4.js"></script>
+<script type="text/babel" class="code-js">
+  let grid = new tui.Grid({
+    el: document.getElementById('grid'),
+    data: newTreeData,
+    rowHeaders: ['checkbox'],
+    bodyHeight: 500,
+    treeColumnOptions: {
+      name: 'name',
+      useCascadingCheckbox: true
+    },
+    scrollX:false,
+    scrollY:false,
+    columns: [
+      {
+        header: 'Name',
         name: 'name',
-        useCascadingCheckbox: true
-      },
-      columns: [
-        {
-          header: 'Name',
-          name: 'name',
-          width: 300
-        },
-        {
-          header: 'Artist',
-          name: 'artist'
-        },
-        {
-          header: 'Type',
-          name: 'type'
-        },
-        {
-          header: 'Release',
-          name: 'release'
-        },
-        {
-          header: 'Genre',
-          name: 'genre'
+        width: 300,
+        editor: {
+          type: 'text'
         }
-      ]
+      },
+      {
+        header: 'Artist',
+        name: 'artist'
+      },
+      {
+        header: 'Type',
+        name: 'type'
+      },
+      {
+        header: 'Release',
+        name: 'release'
+      },
+      {
+        header: 'Genre',
+        name: 'genre'
+      }
+    ]
+  });
+  //console.log('before gridData >> ', grid.getData())
+
+  function reset(){
+
+
+    const currentData = grid.getData();
+    //console.log('currentData >> ', currentData)
+    const simplifiedData = currentData.map(row => {
+      const removeKeys = (obj) => {
+        const { uniqueKey, tree, _attributes, ...newObj } = obj;
+        if (newObj._attributes) {
+          const { tree, ...newAttributes } = newObj._attributes;
+          newObj._attributes = newAttributes;
+        }
+        if (newObj._children && Array.isArray(newObj._children)) {
+          newObj._children = newObj._children.map(removeKeys);
+        }
+        return newObj;
+      };
+
+      return removeKeys(row);
     });
 
-    grid.on('expand', ev => {
-      const { rowKey } = ev;
-      const descendantRows = grid.getDescendantRows(rowKey);
+    //console.log('simplifiedData >> ', simplifiedData)
+    //console.log('newTreeData >> ', newTreeData)
+    // //console.log('grid.getData() >> ', grid)
+    // //console.log('grid.getData() 1 >> ', grid.store)
 
-      console.log('rowKey: ' + rowKey);
-      console.log('descendantRows: ' + descendantRows);
 
-      if (!descendantRows.length) {
-        grid.appendRow(
-          {
-            name: 'dynamic loading data',
-            _children: [
-              {
-                name: 'leaf row'
-              },
-              {
-                name: 'internal row',
-                _children: []
-              }
-            ]
-          },
-          { parentRowKey: rowKey }
-        );
+
+    //
+    // //console.log('last >> ', grid);
+    // const modifiedData = removeKeys(grid.getData());
+    // const modifiedDataString = JSON.stringify(modifiedData);
+    // //console.log('modifiedData >> ', modifiedData)
+    // const modifiedDataArray = JSON.parse(modifiedDataString);
+    // //console.log('modifiedDataArray >> ', modifiedDataArray)
+    // grid.appendRows(modifiedDataArray);
+
+    // modifiedDataArray.forEach(item => {
+    //   grid.appendRow(item);
+    // });
+
+    const gridData = grid.getData();
+    const cleanedData = cleanGridData(gridData);
+    const independentData = JSON.parse(JSON.stringify(cleanedData));
+    grid = null;
+    grid.resetData(independentData);
+    //console.log('after ', grid.getData())
+  }
+
+
+  function cleanGridData(data) {
+    return data.map(item => {
+      const cleanItem = { ...item };
+      delete cleanItem._disabledPriority;
+      delete cleanItem.rowSpanMap;
+      delete cleanItem._relationListItemMap;
+      // delete cleanItem._leaf;
+      delete cleanItem.rowKey;
+
+      if (cleanItem._children && cleanItem._children.length > 0) {
+        cleanItem._children = cleanGridData(cleanItem._children);
+      }
+      return cleanItem;
+    });
+  }
+
+  function removeKeys(data) {
+    data.forEach(item => {
+      // Remove the specified keys from the current item
+      delete item.rowKey;
+      delete item.sortKey;
+      delete item.uniqueKey;
+      delete item.rowNum;
+      // Remove rowNum from _attributes and tree element
+      if (item._attributes) {
+        delete item._attributes.rowNum;
+        // delete item._attributes.tree;
+      }
+
+      // If _children exists, recursively process each child
+      if (item._children && item._children.length > 0) {
+        removeKeys(item._children);
+
+        // Now remove the specified keys from each child
+        item._children.forEach(child => {
+          delete child.rowKey;
+          delete child.sortKey;
+          delete child.uniqueKey;
+          delete child.rowNum;
+
+          // Remove rowNum from _attributes and tree element in child
+          if (child._attributes) {
+            delete child._attributes.rowNum;
+            // delete child._attributes.tree;
+          }
+        });
       }
     });
 
-    grid.on('collapse', ev => {
-      const { rowKey } = ev;
-      const descendantRows = grid.getDescendantRows(rowKey);
+    return data;
+  }
 
-      console.log('rowKey: ' + rowKey);
-      console.log('descendantRows: ' + descendantRows);
-    });
-  </script>
+
+
+
+  function addRow() {
+    const focusedCell = grid.getFocusedCell();
+    if (focusedCell) {
+      const selectedRowKey = focusedCell.rowKey;
+      const selectedRowIndex = grid.getIndexOfRow(selectedRowKey);
+
+      // 선택한 행 다음 인덱스에 새 행 추가
+      grid.appendRow({}, { at: selectedRowIndex + 1, focus: true });
+    } else {
+      // 선택된 행이 없으면 마지막에 새 행 추가
+      grid.appendRow({}, { focus: true });
+    }
+  }
+
+</script>
 </html>

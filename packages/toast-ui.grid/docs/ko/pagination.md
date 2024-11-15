@@ -68,7 +68,7 @@ const grid = new Grid({
 ```js
 const pagination = grid.getPagination();
 const currentPage = pagination.getCurrentPage();
-console.log(currentPage);
+//console.log(currentPage);
 
 grid.setPerPage(10);
 ```

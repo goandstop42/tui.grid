@@ -45,10 +45,10 @@ export default {
           header: 'Personal Score',
           name: 'score',
           onBeforeChange(ev) {
-            console.log('executes before the value changes : ', ev);
+            //console.log('executes before the value changes : ', ev);
           },
           onAfterChange(ev) {
-            console.log('executes after the value has changed : ', ev);
+            //console.log('executes after the value has changed : ', ev);
           },
           copyOptions: {
             useListItemText: true,
@@ -161,21 +161,21 @@ export default {
   },
   methods: {
     onCheck(ev) {
-      console.log('check event: ', ev);
+      //console.log('check event: ', ev);
     },
     onUnCheck(ev) {
-      console.log('uncheck event: ', ev);
+      //console.log('uncheck event: ', ev);
     },
   },
 
   mounted() {
-    console.log('this.$refs.grid.gridInstance >> ', this.$refs.grid.gridInstance);
+    //console.log('this.$refs.grid.gridInstance >> ', this.$refs.grid.gridInstance);
     this.$refs.grid.gridInstance.on('drop', () => {
-      console.log('drop event occurred');
+      //console.log('drop event occurred');
       const target = document.getElementById('target');
-      console.log('target >> ', target);
+      //console.log('target >> ', target);
       target.addEventListener('gridDropEvent', (event) => {
-        console.log('event Custom drop event occurred', event.detail.customData);
+        //console.log('event Custom drop event occurred', event.detail.customData);
         const objText = JSON.stringify(event.detail.customData, null, 10);
         target.innerText += objText;
       });

@@ -27,18 +27,16 @@
     
     <div class="code-html contents">
 <!--      <div id="scrollableContainer" class= "scrollable-container" style="height: 200px">-->
-        <div id="grid"></div>
+
+        <div id="grid">
+
+          <button type="button" onclick="addRow()">add</button>
+          <button type="button" onclick="modifiedData()">modifiedData</button>
+          <button type="button" onclick="destroy()">destroy</button>
+        </div>
+
 <!--      </div>-->
     </div>
-    <button type="button" onclick="addRow()">add</button>
-    <button type="button" onclick="modifiedData()">modifiedData</button>
-      </div>
-    </div>
-<!--     <div class="code-html contents">-->
-<!--      <div  class= "scrollable-container" style="height: 200px">-->
-<!--        <div id="gridCopy"></div>-->
-<!--      </div>-->
-<!--    </div>-->
   </body>
   <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
   <script type="text/javascript" src="../dist/tui-grid.js"></script>
@@ -50,25 +48,24 @@
   </script>
   <script type="text/babel" class="code-js">
     const grid = new tui.Grid({
-      el: document.getElementById('grid'),
-      data: gridData,
-      bodyHeight:200,
-      scrollX: false,
-      scrollY: false,
-      copyOptions: {
-        useFormattedValue: true,
-        useListItemText: false,
-      },
-      columns: [
-        {
-          header: 'Name',
-          name: 'name',
-          editor: TextareaHeader,
+        el: document.getElementById('grid'),
+        data: gridData,
+        bodyHeight:200,
+        scrollX: true,
+        scrollY: true,
+        copyOptions: {
+          useFormattedValue: true,
+          useListItemText: false,
         },
+        columns: [
+          {
+            header: 'Name',
+            name: 'name',
+            editor: TextareaHeader,
+          },
         {
           header: 'Artist',
           name: 'artist',
-          editor:'text'
         },
         {
           header: 'Type',
@@ -90,25 +87,26 @@
       ]
     });
 
-    function addRow(){
-      grid.getRow(0);
-      // grid.appendRow({
-      //   "name": "A Head Full Of Dreams",
-      //   "artist": "Coldplay",
-      // }, {at:6})
-      const data = [
-        { name: 'Han', artist: 1 },
-        { name: 'Kim', artist: 2 },
-        { name: 'Ryu', artist: 3 },
-        { name: 'Lee', artist: 4 },
-      ];
-      grid.appendRows(data);
-      grid.refreshLayout();
-    }
 
     function modifiedData(){
-      console.log("modified >> ", grid.getModifiedRows());
+      //console.log("modified >> ", grid.getModifiedRows());
     }
+
+    function addRow(){
+      const focusedCell = grid.getFocusedCell();
+      //console.log('grid.data >> ', grid.getData())
+      grid.appendRow({}, { at: focusedCell.rowKey+1, focus: true });
+      //console.log('grid.data >> ', grid.getData())
+
+    }
+
+    function destroy(){
+      const currentColumns = grid.getColumns();
+      const newColumns = currentColumns.filter(column => column.name !== 'name');
+      // grid.setColumns(newColumns);
+      grid.disableColumn('type')
+    }
+
 
 
   </script>

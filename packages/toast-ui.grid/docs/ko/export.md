@@ -124,7 +124,7 @@ const grid = Grid({
 
 ```js
 grid.on('beforeExport', ev => {
-  console.log(ev);
+  //console.log(ev);
   // ev.exportFormat - Export format ('txt' | 'csv' | 'xlsx' | 'xls')
   // ev.exportOptions - Used export options
   // ev.data - Data to be finally exported (string[][])
@@ -159,7 +159,7 @@ grid.on('beforeExport', ev => {
 
 ```js
 grid.on('afterExport', ev => {
-  console.log(ev);
+  //console.log(ev);
   // ev.exportFormat - Export format ('txt' | 'csv' | 'xlsx' | 'xls')
   // ev.exportOptions - Used export options
   // ev.data - Data to be finally exported (string[][])

@@ -157,7 +157,7 @@ export default {
   },
   methods: {
     onClick(ev) {
-      console.log('click event: ', ev);
+      //console.log('click event: ', ev);
     }
   }
 };

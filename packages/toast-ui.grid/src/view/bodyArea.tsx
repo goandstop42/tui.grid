@@ -168,7 +168,7 @@ class BodyAreaComp extends Component<Props> {
   // mouse move 할 때 실행되는 함수
   private dragRow = (ev: MouseEvent) => {
     const [pageX, pageY] = getCoordinateWithOffset(ev.pageX, ev.pageY);
-    // console.log('dragRow  >> ', ev);
+    // //console.log('dragRow  >> ', ev);
     if (this.moveEnoughToTriggerDragEvent({ pageX, pageY })) {
       const { el, boundingRect, props } = this;
       const { scrollTop, scrollLeft } = el!;
@@ -245,20 +245,20 @@ class BodyAreaComp extends Component<Props> {
   }
 
   private startToDragRow = (posInfo: PosInfo) => {
-    // console.log('startToDragRow start >> ')
+    // //console.log('startToDragRow start >> ')
     // let mouseX;
     // let mouseY;
     // document.addEventListener('mousemove', function (event) {
     //   const mouseX = event.clientX;
     //   const mouseY = event.clientY;
-    //   // console.log("Mouse X:", mouseX, "Mouse Y:", mouseY);
+    //   // //console.log("Mouse X:", mouseX, "Mouse Y:", mouseY);
     // });
 
     const container = this.el.parentElement!.parentElement!;
     posInfo.container = container;
     this.props.dispatch('resetRowSpan');
     const draggableInfo = createDraggableRowInfo(this.context.store, posInfo);
-    // console.log('draggableInfo >> ', draggableInfo)
+    // //console.log('draggableInfo >> ', draggableInfo)
     if (draggableInfo) {
       const { row, rowKey, line } = draggableInfo;
       const gridEvent = new GridEvent({ rowKey, floatingRow: row });
@@ -272,7 +272,7 @@ class BodyAreaComp extends Component<Props> {
       this.props.eventBus.trigger('dragStart', gridEvent);
 
       if (!gridEvent.isStopped()) {
-        // console.log('startToDragRow >>', row);
+        // //console.log('startToDragRow >>', row);
         //drag 용 html 를 붙인다.
         container.appendChild(row);
 
@@ -308,7 +308,7 @@ class BodyAreaComp extends Component<Props> {
   }
 
   private handleMouseDown = (ev: MouseEvent) => {
-    // console.log('handleMouseDown >> ')
+    // //console.log('handleMouseDown >> ')
     const targetElement = ev.target as HTMLElement;
     if (
       !this.el ||
@@ -505,7 +505,7 @@ class BodyAreaComp extends Component<Props> {
       width: totalColumnWidth + (side === 'R' ? 0 : cellBorderWidth),
       height: totalRowHeight ? totalRowHeight + cellBorderWidth : '100%',
     };
-    // console.log('render >>');
+    // //console.log('render >>');
     return (
       <div
         class={cls('body-area')}

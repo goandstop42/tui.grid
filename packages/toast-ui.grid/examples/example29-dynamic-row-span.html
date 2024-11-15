@@ -43,7 +43,7 @@
 
     const source = document.querySelector("#source");
     source.addEventListener("dragstart", (ev) => {
-        console.log("dragStart");
+        //console.log("dragStart");
         ev.currentTarget.classList.add("dragging");
         ev.dataTransfer.clearData();
         ev.dataTransfer.setData("text/plain", ev.target.id);
@@ -57,7 +57,7 @@
         ev.preventDefault();
     });
     target.addEventListener("drop", (ev) => {
-        console.log("Drop");
+        //console.log("Drop");
         ev.preventDefault();
         const data = ev.dataTransfer.getData("text");
         const source = document.getElementById(data);
@@ -115,7 +115,7 @@
     });
 
     target.addEventListener('gridDropEvent',(event) => {
-        console.log('event Custom drop event occurred', event.detail.customData);
+        //console.log('event Custom drop event occurred', event.detail.customData);
         const objText = JSON.stringify(event.detail.customData, null, 10);
         target.innerText += objText;
     });

@@ -104,7 +104,7 @@ export function findPrevIndex<T>(arr: T[], predicate: (_: T) => boolean): number
   // 데이터 로우 1번부터 ~
   const index = findIndex(predicate, arr);
   const positiveIndex = index <= 0 ? 0 : index - 1;
-  // console.log('findPrevIndex >> ', index, positiveIndex, arr.length - 1)
+  // //console.log('findPrevIndex >> ', index, positiveIndex, arr.length - 1)
   return index >= 0 ? positiveIndex : arr.length - 1;
 }
 
@@ -166,7 +166,7 @@ export function deepCopy<T extends Obj>(obj: T) {
 
 export function assign(targetObj: Obj, obj: Obj) {
   Object.keys(obj).forEach((prop) => {
-    // console.log("targetObj >> ", targetObj, "prop >> ",prop)
+    // //console.log("targetObj >> ", targetObj, "prop >> ",prop)
     if (targetObj.hasOwnProperty(prop) && typeof targetObj[prop] === 'object') {
       if (Array.isArray(obj[prop])) {
         targetObj[prop] = obj[prop];

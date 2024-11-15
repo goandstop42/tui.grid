@@ -14,11 +14,11 @@ const grid = new Grid({
 });
 
 grid.on('click', () => {
-  console.log('clicked!!');
+  //console.log('clicked!!');
 })
 
 grid.on('dblclick', () => {
-  console.log('double clicked!!');
+  //console.log('double clicked!!');
 });
 ```
 
@@ -42,19 +42,19 @@ const grid = new Grid({
       header: 'Name',
       name: 'name',
       onBeforeChange(ev) {
-        console.log('Before change:' + ev);
+        //console.log('Before change:' + ev);
       },
       onAfterChange(ev) {
-        console.log('After change:' + ev);
+        //console.log('After change:' + ev);
       },
       editor: 'text',
     }
   ],
   onGridMounted(ev) {
-    console.log('mounted' + ev);
+    //console.log('mounted' + ev);
   },
   onGridBeforeDestroy(ev) {
-    console.log('before destroy' + ev);
+    //console.log('before destroy' + ev);
   }
 });
 ```
@@ -84,7 +84,7 @@ grid.on('click', (ev) => {
 
 ```javascript
 grid.on('mousedown', (ev) => {
-  console.log(ev.nativeEvent);
+  //console.log(ev.nativeEvent);
 });
 ```
 
